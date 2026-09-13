@@ -78,14 +78,21 @@ const Tabela = (props: TabelaSudokuProps) => {
     });
   }
 
+
+  const classeBordaPorQuadrante = (linha: number, coluna: number) => {
+    const bordaDireita = (coluna + 1) % 3 === 0 && coluna !== 8 ? "border-r-4" : "";
+    const bordaInferior = (linha + 1) % 3 === 0 && linha !== 8 ? "border-b-4" : "";
+    return `border border-gray-400 ${bordaDireita} ${bordaInferior}`;
+  }
+
   return (
     <div>
-      <table className="border-collapse border border-gray-400 h-112.5 w-112.5">
+      <table className="border-collapse border-4 border-gray-400 h-112.5 w-112.5">
         <tbody>
           {tabela.map((linha, i) => (
             <tr key={i}>
               {linha.map((celula, j) => (
-                <td key={j} className="border border-gray-400">
+                <td key={j} className={classeBordaPorQuadrante(i, j)}>
                   <BotaoTabela celula={celula} onFocus={() => handleClick(i, j)}  onClick={() => handleClick(i, j)} onKeyDown={(e) => handleKeyDown(e, i, j)} />
                 </td>
               ))}
