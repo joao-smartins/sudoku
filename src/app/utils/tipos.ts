@@ -10,9 +10,13 @@ export type TabelaSudoku = CelulaSudoku[][];
 
 export interface TabelaSudokuProps {
   tabela: TabelaSudoku;
+  setTabela: React.Dispatch<React.SetStateAction<TabelaSudoku | undefined>>;
 }
 
 export interface BotaoTabelaProps {
-  children?: React.ReactNode;
+  celula: CelulaSudoku;
   selecionada?: boolean;
+  onClick?: () => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
+  onFocus?: () => void;
 }

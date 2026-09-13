@@ -1,34 +1,22 @@
-"use client";
 import { BotaoTabelaProps } from "@/app/utils/tipos";
-import { useState } from "react";
-
 const BotaoTabela = (props: BotaoTabelaProps) => {
-  const { children } = props;
-  const [selecionada, setSelecionada] = useState<boolean>(false);
+  const { celula, onClick, onKeyDown, onFocus } = props;
 
-  const handleClick = () => {
-    setSelecionada(!selecionada);
-  };
+  const classeCelula = celula.selecionada && celula.permitida
+    ? "bg-blue-300 hover:bg-blue-700 text-white"
+    : celula.permitida
+      ? "text-black"
+      : "bg-red-600 text-white";
 
-  const onKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-     event.preventDefault();
-    if(!Number.isNaN(Number(event.key))) {
-     const numero = Number(event.key);
-     console.log('Número pressionado:', numero);
-    }else if (event.key === "Enter") {
-      handleClick();
-    }
-  }
-
-  
   return (
     <button
-      onClick={handleClick}
+      onClick={onClick}
       onKeyDown={onKeyDown}
-      className={` font-bold h-full w-full  ${selecionada ? 'bg-blue-300 !hover:bg-blue-700 text-white' : 'text-black bg'}`}
+      onFocus={onFocus}
+      className={`h-12.5 w-12.5 p-0 flex items-center justify-center hover:bg-gray-200 ${classeCelula}`}
     >
-      {children}
+      {celula.valor}
     </button>
   );
-}
-export default BotaoTabela
+};
+export default BotaoTabela;
