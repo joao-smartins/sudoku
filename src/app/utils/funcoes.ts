@@ -13,6 +13,7 @@ export const preencherTabela = (
         coluna: j,
         linha: i,
         permitida: true,
+        selecionada: false,
       };
     }
   }

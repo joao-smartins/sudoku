@@ -1,4 +1,5 @@
 import { TabelaSudokuProps } from "@/app/utils/tipos";
+import BotaoTabela from "./BotaoTabela";
 
 const Tabela = (props: TabelaSudokuProps) => {
   const { tabela } = props;
@@ -9,8 +10,10 @@ const Tabela = (props: TabelaSudokuProps) => {
           {tabela.map((linha, i) => (
             <tr key={i}>
               {linha.map((celula, j) => (
-                <td key={j} className="border border-gray-400 p-2">
-                  {celula.valor}
+                <td key={j} className="border border-gray-400">
+                  <BotaoTabela>
+                    {celula.valor}
+                  </BotaoTabela>
                 </td>
               ))}
             </tr>
