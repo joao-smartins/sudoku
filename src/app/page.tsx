@@ -14,7 +14,6 @@ export default function Home() {
   
   useEffect(() => {
     if (sudokuTable) {
-      //console.log("Tabela atualizada:");
     }
   }, [sudokuTable]);
 

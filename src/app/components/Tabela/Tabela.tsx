@@ -1,6 +1,6 @@
+import { blocoPermitidoInserido, colunaPermitidaInserida, linhaPermitidaInserida, verificarQualOBloco } from "@/app/utils/funcoes";
 import { TabelaSudoku, TabelaSudokuProps } from "@/app/utils/tipos";
 import BotaoTabela from "./BotaoTabela";
-import { blocoPermitido, blocoPermitidoInserido, colunaPermitida, colunaPermitidaInserida, linhaPermitida, linhaPermitidaInserida, verificarQualOBloco } from "@/app/utils/funcoes";
 
 const Tabela = (props: TabelaSudokuProps) => {
   const { tabela, setTabela } = props;
@@ -9,10 +9,6 @@ const Tabela = (props: TabelaSudokuProps) => {
     const linhaValida = linhaPermitidaInserida(tebelaAtualizada, linha);
     const colunaValida = colunaPermitidaInserida(tebelaAtualizada, coluna);
     const blocoUtilizado = verificarQualOBloco(linha, coluna);
-    console.log('Validação da célula:');
-    console.log('Linha válida?:', linhaValida);
-    console.log('Coluna válida?:', colunaValida);
-    console.log('Bloco utilizado: ', blocoUtilizado);
 
     if (!blocoUtilizado) return;
     const blocoValido = blocoPermitidoInserido(
@@ -32,7 +28,6 @@ const Tabela = (props: TabelaSudokuProps) => {
       };
       return novaTabela;
     });
-    return linhaValida && colunaValida && blocoValido;
   }
 
   const limparSelecionadas = () => {
@@ -78,8 +73,7 @@ const Tabela = (props: TabelaSudokuProps) => {
         ...novaTabela[linha][coluna],
         valor: novoValor,
       };
-      const validacao = validarCelula(novaTabela, linha, coluna, novoValor);
-      //console.log('Novo valor válido? ', validacao);
+      validarCelula(novaTabela, linha, coluna, novoValor);
       return novaTabela;
     });
   }

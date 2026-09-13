@@ -1,6 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 import { TabelaSudoku } from "./tipos";
 
+//Utilidades
+
 export const preencherTabela = (
   setTabela: Dispatch<SetStateAction<TabelaSudoku | undefined>>,
 ) => {
@@ -17,8 +19,33 @@ export const preencherTabela = (
       };
     }
   }
-  //console.log("Tabela preenchida:", novaTabela);
   setTabela(novaTabela);
+};
+
+const blocos = [
+  { linhaInicial: 0, linhaFinal: 2, colunaInicial: 0, colunaFinal: 2 },
+  { linhaInicial: 0, linhaFinal: 2, colunaInicial: 3, colunaFinal: 5 },
+  { linhaInicial: 0, linhaFinal: 2, colunaInicial: 6, colunaFinal: 8 },
+  { linhaInicial: 3, linhaFinal: 5, colunaInicial: 0, colunaFinal: 2 },
+  { linhaInicial: 3, linhaFinal: 5, colunaInicial: 3, colunaFinal: 5 },
+  { linhaInicial: 3, linhaFinal: 5, colunaInicial: 6, colunaFinal: 8 },
+  { linhaInicial: 6, linhaFinal: 8, colunaInicial: 0, colunaFinal: 2 },
+  { linhaInicial: 6, linhaFinal: 8, colunaInicial: 3, colunaFinal: 5 },
+  { linhaInicial: 6, linhaFinal: 8, colunaInicial: 6, colunaFinal: 8 },
+];
+
+export const verificarQualOBloco = (linha: number, coluna: number) => {
+  for (const bloco of blocos) {
+    if (
+      linha >= bloco.linhaInicial &&
+      linha <= bloco.linhaFinal &&
+      coluna >= bloco.colunaInicial &&
+      coluna <= bloco.colunaFinal
+    ) {
+      return bloco;
+    }
+  }
+  return null;
 };
 
 //Verificações antes de inserir o valor na célula
@@ -68,33 +95,6 @@ export const blocoPermitido = (
   return true;
 };
 
-const blocos = [
-  { linhaInicial: 0, linhaFinal: 2, colunaInicial: 0, colunaFinal: 2 },
-  { linhaInicial: 0, linhaFinal: 2, colunaInicial: 3, colunaFinal: 5 },
-  { linhaInicial: 0, linhaFinal: 2, colunaInicial: 6, colunaFinal: 8 },
-  { linhaInicial: 3, linhaFinal: 5, colunaInicial: 0, colunaFinal: 2 },
-  { linhaInicial: 3, linhaFinal: 5, colunaInicial: 3, colunaFinal: 5 },
-  { linhaInicial: 3, linhaFinal: 5, colunaInicial: 6, colunaFinal: 8 },
-  { linhaInicial: 6, linhaFinal: 8, colunaInicial: 0, colunaFinal: 2 },
-  { linhaInicial: 6, linhaFinal: 8, colunaInicial: 3, colunaFinal: 5 },
-  { linhaInicial: 6, linhaFinal: 8, colunaInicial: 6, colunaFinal: 8 },
-];
-
-export const verificarQualOBloco = (linha: number, coluna: number) => {
-  for (const bloco of blocos) {
-    if (
-      linha >= bloco.linhaInicial &&
-      linha <= bloco.linhaFinal &&
-      coluna >= bloco.colunaInicial &&
-      coluna <= bloco.colunaFinal
-    ) {
-      return bloco;
-    }
-  }
-  return null;
-};
-
-
 //Verificações após inserir o valor na célula
 
 export const linhaPermitidaInserida = (tabela: TabelaSudoku, linha: number) => {
@@ -115,7 +115,6 @@ export const colunaPermitidaInserida = (
   tabela: TabelaSudoku,
   coluna: number,
 ) => {
-  //console.log(tabela)
   for (let i = 0; i < 9; i++) {
     const celula = tabela[i][coluna];
     if (celula.valor !== null) {
@@ -135,22 +134,7 @@ export const blocoPermitidoInserido = (
   blocoColuna: number,
   novoValor: number
 ) => {
-  // for (let i = blocoLinha; i < blocoLinha + 3; i++) {
-  //   for (let j = blocoColuna; j < blocoColuna + 3; j++) {
-  //     const celula = tabela[i][j];
-  //     if (celula.valor !== null) {
-  //       for (let k = blocoLinha; k < blocoLinha + 3; k++) {
-  //         for (let l = blocoColuna; l < blocoColuna + 3; l++) {
-  //           if (k !== i && l !== j && tabela[k][l].valor === celula.valor) {
-  //             return false;
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-  // return true;
-  
+
   let quantidadeDeValoresIguais = 0;
   for (let i = blocoLinha; i < blocoLinha + 3 && quantidadeDeValoresIguais <= 1; i++) {
     for (let j = blocoColuna; j < blocoColuna + 3 && quantidadeDeValoresIguais <= 1; j++) {
