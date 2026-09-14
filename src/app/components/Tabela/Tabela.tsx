@@ -87,7 +87,7 @@ const Tabela = (props: TabelaSudokuProps) => {
 
   return (
     <div>
-      <table className="border-collapse border-4 border-gray-400 h-112.5 w-112.5">
+      <table className="border-collapse border-4 border-gray-400 h-67.5 w-67.5 sm:h-112.5 sm:w-112.5">
         <tbody>
           {tabela.map((linha, i) => (
             <tr key={i}>
