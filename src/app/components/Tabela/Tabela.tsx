@@ -1,4 +1,4 @@
-import { blocoPermitidoInserido, colunaPermitidaInserida, linhaPermitidaInserida, verificarQualOBloco } from "@/app/utils/funcoes";
+import { blocoPermitido, blocoPermitidoInserido, colunaPermitida, colunaPermitidaInserida, linhaPermitida, linhaPermitidaInserida, verificarQualOBloco } from "@/app/utils/funcoes";
 import { TabelaSudoku, TabelaSudokuProps } from "@/app/utils/tipos";
 import BotaoTabela from "./BotaoTabela";
 
@@ -28,6 +28,46 @@ const Tabela = (props: TabelaSudokuProps) => {
       };
       return novaTabela;
     });
+  }
+
+
+
+
+  const revalidarCelula = (tabela: TabelaSudoku, linha: number, coluna: number, novoValor: number) => {
+
+    const linhaValida = linhaPermitida(tabela, linha, novoValor);
+    const colunaValida = colunaPermitida(tabela, coluna, novoValor);
+    const blocoUtilizado = verificarQualOBloco(linha, coluna);
+
+    if (!blocoUtilizado) return;
+    const blocoValido = blocoPermitido(
+      tabela,
+      blocoUtilizado.linhaInicial,
+      blocoUtilizado.colunaInicial,
+      novoValor
+    );
+
+    setTabela((prevTabela) => {
+      if (!prevTabela) return undefined;
+      const novaTabela = [...prevTabela];
+      novaTabela[linha] = [...novaTabela[linha]];
+      novaTabela[linha][coluna] = {
+        ...novaTabela[linha][coluna],
+        permitida: linhaValida && colunaValida && blocoValido,
+      };
+      return novaTabela;
+    });
+  }
+
+  const revalidarTodasCelulas = (tabela: TabelaSudoku) => {
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {
+        const celula = tabela[i][j];
+        if (celula.valor !== null) {
+          revalidarCelula(tabela, i, j, celula.valor);
+        }
+      }
+    }
   }
 
   const limparSelecionadas = () => {
@@ -61,9 +101,10 @@ const Tabela = (props: TabelaSudokuProps) => {
     if (Number.isNaN(Number(e.key))) return;
     const novoValor = Number(e.key);
     if (novoValor < 1 || novoValor > 9) return;
-    if(tabela[linha][coluna].valor === novoValor) return;
-
-
+    if(tabela[linha][coluna].valor === novoValor) {
+      revalidarTodasCelulas(tabela);
+      return;
+    }
 
     setTabela((prevTabela) => {
       if (!prevTabela) return undefined;
@@ -74,6 +115,7 @@ const Tabela = (props: TabelaSudokuProps) => {
         valor: novoValor,
       };
       validarCelula(novaTabela, linha, coluna, novoValor);
+      revalidarTodasCelulas(novaTabela);
       return novaTabela;
     });
   }

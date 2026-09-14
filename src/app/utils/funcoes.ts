@@ -55,13 +55,14 @@ export const linhaPermitida = (
   linha: number,
   novoValor: number,
 ) => {
-  for (let j = 0; j < 9; j++) {
+  let quantidadeDeValoresIguais = 0;
+  for (let j = 0; j < 9 && quantidadeDeValoresIguais <= 1; j++) {
     const celula = tabela[linha][j];
     if (celula.valor !== null && celula.valor === novoValor) {
-      return false;
+      quantidadeDeValoresIguais++;
     }
   }
-  return true;
+  return quantidadeDeValoresIguais <= 1;
 };
 
 export const colunaPermitida = (
@@ -69,30 +70,32 @@ export const colunaPermitida = (
   coluna: number,
   novoValor: number,
 ) => {
-  for (let i = 0; i < 9; i++) {
+  let quantidadeDeValoresIguais = 0;
+  for (let i = 0; i < 9 && quantidadeDeValoresIguais <= 1; i++) {
     const celula = tabela[i][coluna];
     if (celula.valor !== null && celula.valor === novoValor) {
-      return false;
+      quantidadeDeValoresIguais++;
     }
   }
-  return true;
+  return quantidadeDeValoresIguais <= 1;
 };
 
 export const blocoPermitido = (
   tabela: TabelaSudoku,
-  celulaInicial: number,
-  celulaFinal: number,
+  blocoLinha: number,
+  blocoColuna: number,
   novoValor: number,
 ) => {
-  for (let i = celulaInicial; i < celulaFinal; i++) {
-    for (let j = celulaInicial; j < celulaFinal; j++) {
+  let quantidadeDeValoresIguais = 0;
+  for (let i = blocoLinha; i < blocoLinha + 3 && quantidadeDeValoresIguais <= 1; i++) {
+    for (let j = blocoColuna; j < blocoColuna + 3 && quantidadeDeValoresIguais <= 1; j++) {
       const celula = tabela[i][j];
       if (celula.valor !== null && celula.valor === novoValor) {
-        return false;
+        quantidadeDeValoresIguais++;
       }
     }
   }
-  return true;
+  return quantidadeDeValoresIguais <= 1;
 };
 
 //Verificações após inserir o valor na célula
