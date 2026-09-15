@@ -83,6 +83,21 @@ const Tabela = (props: TabelaSudokuProps) => {
     });
   }
 
+  const esvaziarTabela = () => {
+    setTabela((prevTabela) => {
+      if (!prevTabela) return undefined;
+      const novaTabela = prevTabela.map((linha) =>
+        linha.map((celula) => ({
+          ...celula,
+          valor: null,
+          permitida: true,
+          selecionada: false,
+        }))
+      );
+      return novaTabela;
+    });
+  }
+
   const handleClick = (linha: number, coluna: number) => {
     limparSelecionadas();
     setTabela((prevTabela) => {
@@ -102,7 +117,7 @@ const Tabela = (props: TabelaSudokuProps) => {
     const novoValor = Number(e.key);
     if (novoValor < 1 || novoValor > 9) return;
     if(tabela[linha][coluna].valor === novoValor) {
-      revalidarTodasCelulas(tabela);
+      //revalidarTodasCelulas(tabela);
       return;
     }
 
@@ -114,8 +129,8 @@ const Tabela = (props: TabelaSudokuProps) => {
         ...novaTabela[linha][coluna],
         valor: novoValor,
       };
-      validarCelula(novaTabela, linha, coluna, novoValor);
-      revalidarTodasCelulas(novaTabela);
+      //validarCelula(novaTabela, linha, coluna, novoValor);
+      //revalidarTodasCelulas(novaTabela);
       return novaTabela;
     });
   }
@@ -127,8 +142,16 @@ const Tabela = (props: TabelaSudokuProps) => {
     return `border border-gray-400 ${bordaDireita} ${bordaInferior}`;
   }
 
+  const classeBotaoGenerico = 'py-2 bg-gray-300 hover:bg-gray-600 hover:text-white px-3 rounded';
+
   return (
     <div>
+        <div className="flex justify-between gap-2">
+          <button className={classeBotaoGenerico} onClick={() => revalidarTodasCelulas(tabela)}>Validar Celulas</button>
+          <button className={classeBotaoGenerico} onClick={() => esvaziarTabela()}>Esvaziar Tabela</button>
+        </div>
+      <br />
+      <br />
       <table className="border-collapse border-4 border-gray-400 h-67.5 w-67.5 sm:h-112.5 sm:w-112.5">
         <tbody>
           {tabela.map((linha, i) => (
