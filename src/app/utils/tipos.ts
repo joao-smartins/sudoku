@@ -4,6 +4,7 @@ export type CelulaSudoku = {
   linha: number;
   permitida: boolean;
   selecionada: boolean;
+  possibilidades?: number[];
 };
 
 export type TabelaSudoku = CelulaSudoku[][];

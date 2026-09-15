@@ -11,12 +11,6 @@ export default function Home() {
     preencherTabela(setSudokuTable);
   }, []);
 
-  
-  useEffect(() => {
-    if (sudokuTable) {
-    }
-  }, [sudokuTable]);
-
   return (
     <div className="flex flex-col flex-1 items-center justify-center">
       {sudokuTable && <Tabela tabela={sudokuTable} setTabela={setSudokuTable} />}
