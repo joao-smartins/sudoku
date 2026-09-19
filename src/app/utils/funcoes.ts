@@ -51,7 +51,7 @@ export const verificarQualOBloco = (linha: number, coluna: number) => {
 
 //Verificações antes de inserir o valor na célula
 
-export const linhaPermitida = (
+export const linhaPermitidaPosInsercao = (
   tabela: TabelaSudoku,
   linha: number,
   novoValor: number,
@@ -66,7 +66,7 @@ export const linhaPermitida = (
   return quantidadeDeValoresIguais <= 1;
 };
 
-export const colunaPermitida = (
+export const colunaPermitidaPosInsercao = (
   tabela: TabelaSudoku,
   coluna: number,
   novoValor: number,
@@ -81,15 +81,23 @@ export const colunaPermitida = (
   return quantidadeDeValoresIguais <= 1;
 };
 
-export const blocoPermitido = (
+export const blocoPermitidoPosInsercao = (
   tabela: TabelaSudoku,
   blocoLinha: number,
   blocoColuna: number,
   novoValor: number,
 ) => {
   let quantidadeDeValoresIguais = 0;
-  for (let i = blocoLinha; i < blocoLinha + 3 && quantidadeDeValoresIguais <= 1; i++) {
-    for (let j = blocoColuna; j < blocoColuna + 3 && quantidadeDeValoresIguais <= 1; j++) {
+  for (
+    let i = blocoLinha;
+    i < blocoLinha + 3 && quantidadeDeValoresIguais <= 1;
+    i++
+  ) {
+    for (
+      let j = blocoColuna;
+      j < blocoColuna + 3 && quantidadeDeValoresIguais <= 1;
+      j++
+    ) {
       const celula = tabela[i][j];
       if (celula.valor !== null && celula.valor === novoValor) {
         quantidadeDeValoresIguais++;
@@ -99,54 +107,169 @@ export const blocoPermitido = (
   return quantidadeDeValoresIguais <= 1;
 };
 
-//Verificações após inserir o valor na célula
+// //Verificações após inserir o valor na célula
 
-export const linhaPermitidaInserida = (tabela: TabelaSudoku, linha: number) => {
+// export const linhaPermitidaInserida = (tabela: TabelaSudoku, linha: number) => {
+//   for (let j = 0; j < 9; j++) {
+//     const celula = tabela[linha][j];
+//     if (celula.valor !== null) {
+//       for (let k = 0; k < 9; k++) {
+//         if (k !== j && tabela[linha][k].valor === celula.valor) {
+//           return false;
+//         }
+//       }
+//     }
+//   }
+//   return true;
+// };
+
+// export const colunaPermitidaInserida = (
+//   tabela: TabelaSudoku,
+//   coluna: number,
+// ) => {
+//   for (let i = 0; i < 9; i++) {
+//     const celula = tabela[i][coluna];
+//     if (celula.valor !== null) {
+//       for (let k = 0; k < 9; k++) {
+//         if (k !== i && tabela[k][coluna].valor === celula.valor) {
+//           return false;
+//         }
+//       }
+//     }
+//   }
+//   return true;
+// };
+
+// export const blocoPermitidoInserido = (
+//   tabela: TabelaSudoku,
+//   blocoLinha: number,
+//   blocoColuna: number,
+//   novoValor: number
+// ) => {
+
+//   let quantidadeDeValoresIguais = 0;
+//   for (let i = blocoLinha; i < blocoLinha + 3 && quantidadeDeValoresIguais <= 1; i++) {
+//     for (let j = blocoColuna; j < blocoColuna + 3 && quantidadeDeValoresIguais <= 1; j++) {
+//       const celula = tabela[i][j];
+//       if (celula.valor !== null && celula.valor === novoValor) {
+//         quantidadeDeValoresIguais++;
+//       }
+//     }
+//   }
+//   return quantidadeDeValoresIguais <= 1;
+// };
+
+export const linhaPermitidaPreInsercao = (
+  tabela: TabelaSudoku,
+  linha: number,
+  coluna: number,
+  novoValor: number,
+) => {
   for (let j = 0; j < 9; j++) {
-    const celula = tabela[linha][j];
-    if (celula.valor !== null) {
-      for (let k = 0; k < 9; k++) {
-        if (k !== j && tabela[linha][k].valor === celula.valor) {
-          return false;
-        }
-      }
+    if (j !== coluna && tabela[linha][j].valor === novoValor) {
+      return false;
     }
   }
   return true;
 };
 
-export const colunaPermitidaInserida = (
+export const colunaPermitidaPreInsercao = (
   tabela: TabelaSudoku,
+  linha: number,
   coluna: number,
+  novoValor: number,
 ) => {
   for (let i = 0; i < 9; i++) {
-    const celula = tabela[i][coluna];
-    if (celula.valor !== null) {
-      for (let k = 0; k < 9; k++) {
-        if (k !== i && tabela[k][coluna].valor === celula.valor) {
-          return false;
-        }
-      }
+    if (i !== linha && tabela[i][coluna].valor === novoValor) {
+      return false;
     }
   }
   return true;
 };
 
-export const blocoPermitidoInserido = (
+export const blocoPermitidoPreInsercao = (
   tabela: TabelaSudoku,
-  blocoLinha: number,
-  blocoColuna: number,
-  novoValor: number
+  linha: number,
+  coluna: number,
+  novoValor: number,
 ) => {
+  const bloco = verificarQualOBloco(linha, coluna);
+  if (bloco) {
+    for (let i = bloco.linhaInicial; i <= bloco.linhaFinal; i++) {
+      for (let j = bloco.colunaInicial; j <= bloco.colunaFinal; j++) {
+        if ((i !== linha || j !== coluna) && tabela[i][j].valor === novoValor) {
+          return false;
+        }
+      }
+    }
+  } else return false;
+  return true;
+};
 
-  let quantidadeDeValoresIguais = 0;
-  for (let i = blocoLinha; i < blocoLinha + 3 && quantidadeDeValoresIguais <= 1; i++) {
-    for (let j = blocoColuna; j < blocoColuna + 3 && quantidadeDeValoresIguais <= 1; j++) {
-      const celula = tabela[i][j];
-      if (celula.valor !== null && celula.valor === novoValor) {
-        quantidadeDeValoresIguais++;
+export const copiarTabela = (tabela: TabelaSudoku): TabelaSudoku => {
+  return tabela.map((linha) =>
+    linha.map((celula) => ({
+      ...celula,
+      possibilidades: [...celula.possibilidades],
+    })),
+  );
+};
+
+export const verificarCelulaPreInsercao = (
+  tabela: TabelaSudoku,
+  linha: number,
+  coluna: number,
+  novoValor: number,
+) => {
+  const linhaValida = linhaPermitidaPreInsercao(
+    tabela,
+    linha,
+    coluna,
+    novoValor,
+  );
+  const colunaValida = colunaPermitidaPreInsercao(
+    tabela,
+    linha,
+    coluna,
+    novoValor,
+  );
+  const blocoValido = blocoPermitidoPreInsercao(
+    tabela,
+    linha,
+    coluna,
+    novoValor,
+  );
+  return linhaValida && colunaValida && blocoValido;
+};
+
+export const ultimaCelulaNaoPreenchida = (tabela: TabelaSudoku) => {
+  let encontrada = false;
+  let ultimaCelula = null;
+  for (let i = 8; i >= 0 && !encontrada; i--) {
+    for (let j = 8; j >= 0 && !encontrada; j--) {
+      if (tabela[i][j].valor === null) {
+        encontrada = true;
+        ultimaCelula = {
+          linha: i,
+          coluna: j,
+          valor: null,
+          possibilidades: tabela[i][j].possibilidades,
+          permitida: tabela[i][j].permitida,
+          selecionada: tabela[i][j].selecionada,
+        };
       }
     }
   }
-  return quantidadeDeValoresIguais <= 1; 
+  return ultimaCelula;
 };
+
+export const verificarTodasCelulasPreenchidas = (tabela: TabelaSudoku) => {
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      if (tabela[i][j].valor === null) {
+        return false;
+      }
+    }
+  }
+  return true;
+}

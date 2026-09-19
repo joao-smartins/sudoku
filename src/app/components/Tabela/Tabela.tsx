@@ -1,46 +1,43 @@
-import { blocoPermitido, blocoPermitidoInserido, colunaPermitida, colunaPermitidaInserida, linhaPermitida, linhaPermitidaInserida, verificarQualOBloco } from "@/app/utils/funcoes";
+import { blocoPermitidoPosInsercao, colunaPermitidaPosInsercao, linhaPermitidaPosInsercao, verificarQualOBloco } from "@/app/utils/funcoes";
 import { TabelaSudoku, TabelaSudokuProps } from "@/app/utils/tipos";
 import BotaoTabela from "./BotaoTabela";
 
 const Tabela = (props: TabelaSudokuProps) => {
   const { tabela, setTabela } = props;
 
-  const validarCelula = (tebelaAtualizada: TabelaSudoku, linha: number, coluna: number, novoValor: number) => {
-    const linhaValida = linhaPermitidaInserida(tebelaAtualizada, linha);
-    const colunaValida = colunaPermitidaInserida(tebelaAtualizada, coluna);
-    const blocoUtilizado = verificarQualOBloco(linha, coluna);
+  // const validarCelula = (tebelaAtualizada: TabelaSudoku, linha: number, coluna: number, novoValor: number) => {
+  //   const linhaValida = linhaPermitidaInserida(tebelaAtualizada, linha);
+  //   const colunaValida = colunaPermitidaInserida(tebelaAtualizada, coluna);
+  //   const blocoUtilizado = verificarQualOBloco(linha, coluna);
 
-    if (!blocoUtilizado) return;
-    const blocoValido = blocoPermitidoInserido(
-      tebelaAtualizada,
-      blocoUtilizado.linhaInicial,
-      blocoUtilizado.colunaInicial,
-      novoValor
-    );
+  //   if (!blocoUtilizado) return;
+  //   const blocoValido = blocoPermitidoInserido(
+  //     tebelaAtualizada,
+  //     blocoUtilizado.linhaInicial,
+  //     blocoUtilizado.colunaInicial,
+  //     novoValor
+  //   );
 
-    setTabela((prevTabela) => {
-      if (!prevTabela) return undefined;
-      const novaTabela = [...prevTabela];
-      novaTabela[linha] = [...novaTabela[linha]];
-      novaTabela[linha][coluna] = {
-        ...novaTabela[linha][coluna],
-        permitida: linhaValida && colunaValida && blocoValido,
-      };
-      return novaTabela;
-    });
-  }
-
-
-
+  //   setTabela((prevTabela) => {
+  //     if (!prevTabela) return undefined;
+  //     const novaTabela = [...prevTabela];
+  //     novaTabela[linha] = [...novaTabela[linha]];
+  //     novaTabela[linha][coluna] = {
+  //       ...novaTabela[linha][coluna],
+  //       permitida: linhaValida && colunaValida && blocoValido,
+  //     };
+  //     return novaTabela;
+  //   });
+  // }
 
   const revalidarCelula = (tabela: TabelaSudoku, linha: number, coluna: number, novoValor: number) => {
 
-    const linhaValida = linhaPermitida(tabela, linha, novoValor);
-    const colunaValida = colunaPermitida(tabela, coluna, novoValor);
+    const linhaValida = linhaPermitidaPosInsercao(tabela, linha, novoValor);
+    const colunaValida = colunaPermitidaPosInsercao(tabela, coluna, novoValor);
     const blocoUtilizado = verificarQualOBloco(linha, coluna);
 
     if (!blocoUtilizado) return;
-    const blocoValido = blocoPermitido(
+    const blocoValido = blocoPermitidoPosInsercao(
       tabela,
       blocoUtilizado.linhaInicial,
       blocoUtilizado.colunaInicial,
@@ -117,7 +114,7 @@ const Tabela = (props: TabelaSudokuProps) => {
     const novoValor = Number(e.key);
     if (novoValor < 1 || novoValor > 9) return;
     if(tabela[linha][coluna].valor === novoValor) {
-      //revalidarTodasCelulas(tabela);
+      revalidarTodasCelulas(tabela);
       return;
     }
 
@@ -130,7 +127,7 @@ const Tabela = (props: TabelaSudokuProps) => {
         valor: novoValor,
       };
       //validarCelula(novaTabela, linha, coluna, novoValor);
-      //revalidarTodasCelulas(novaTabela);
+      revalidarTodasCelulas(novaTabela);
       return novaTabela;
     });
   }
