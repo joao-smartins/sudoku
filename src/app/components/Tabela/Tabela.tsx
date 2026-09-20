@@ -1,6 +1,7 @@
 import { blocoPermitidoPosInsercao, colunaPermitidaPosInsercao, linhaPermitidaPosInsercao, verificarQualOBloco } from "@/app/utils/funcoes";
 import { TabelaSudoku, TabelaSudokuProps } from "@/app/utils/tipos";
 import BotaoTabela from "./BotaoTabela";
+import { buscaPorProfundidade } from "@/app/utils/buscasCegas";
 
 const Tabela = (props: TabelaSudokuProps) => {
   const { tabela, setTabela } = props;
@@ -115,6 +116,7 @@ const Tabela = (props: TabelaSudokuProps) => {
     if (novoValor < 1 || novoValor > 9) return;
     if(tabela[linha][coluna].valor === novoValor) {
       revalidarTodasCelulas(tabela);
+      console.log(tabela)
       return;
     }
 
@@ -132,6 +134,16 @@ const Tabela = (props: TabelaSudokuProps) => {
     });
   }
 
+  const handleBuscaProfundidade = () => {
+    const tabelaResolvida = buscaPorProfundidade(tabela);
+    if (tabelaResolvida) {
+      setTabela(tabelaResolvida);
+    } else {
+      alert("Não foi possível resolver o Sudoku com busca em profundidade.");
+    }
+  };
+
+
 
   const classeBordaPorQuadrante = (linha: number, coluna: number) => {
     const bordaDireita = (coluna + 1) % 3 === 0 && coluna !== 8 ? "border-r-4" : "";
@@ -146,6 +158,7 @@ const Tabela = (props: TabelaSudokuProps) => {
         <div className="flex justify-between gap-2">
           <button className={classeBotaoGenerico} onClick={() => revalidarTodasCelulas(tabela)}>Validar Celulas</button>
           <button className={classeBotaoGenerico} onClick={() => esvaziarTabela()}>Esvaziar Tabela</button>
+          <button className={classeBotaoGenerico} onClick={() => handleBuscaProfundidade()}>Resolver com Busca em Profundidade</button>
         </div>
       <br />
       <br />

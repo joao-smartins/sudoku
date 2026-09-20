@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { TabelaSudoku } from "./tipos";
+import { CelulaSudoku, TabelaSudoku } from "./tipos";
 
 //Utilidades
 
@@ -272,4 +272,45 @@ export const verificarTodasCelulasPreenchidas = (tabela: TabelaSudoku) => {
     }
   }
   return true;
+};
+
+export const proximaCelulaNaoPreenchida: (
+  tabela: TabelaSudoku,
+) => CelulaSudoku | null = (tabela: TabelaSudoku) => {
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      if (tabela[i][j].valor === null) {
+        const celulaCopiada: CelulaSudoku = {
+          linha: i,
+          coluna: j,
+          valor: null,
+          permitida: tabela[i][j].permitida,
+          selecionada: tabela[i][j].selecionada,
+          possibilidades: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        };
+        return celulaCopiada;
+      }
+    }
+  }
+  return null;
+};
+
+
+export const retornarCelulaAnteriorVisitada = (
+  tabela: TabelaSudoku,
+  linha: number,
+  coluna: number,
+  visitados: CelulaSudoku[],
+) => {
+  // for (let i = visitados.length - 1; i >= 0; i--) {
+  //   const celula = visitados[i];
+  //   if (celula.linha === linha && celula.coluna === coluna) {
+  //     return celula;
+  //   }
+  // }
+  if (visitados.length > 0) {
+    const ultimaCelula = visitados.pop()!;
+    return ultimaCelula;
+  }
+  return null;
 }
