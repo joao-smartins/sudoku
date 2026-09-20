@@ -1,20 +1,37 @@
+import { copiarTabela } from "./funcoes";
+import {
+  calcularPossibilidades,
+  maiorGrauDeRestricaoHillClimbing,
+} from "./heuristicas";
 import { TabelaSudoku } from "./tipos";
 
-// função AEstrela(inicial, objetivo):
-//   fronteira ← fila_prioridade por f(n)=g(n)+h(n)
-//   fronteira.insere(inicial, h(inicial))
-//   g[inicial] ← 0
-//   enquanto fronteira não vazia:
-//     nó ← fronteira.remove_menor_f()
-//     se nó = objetivo: retorna caminho(nó)
-//     para cada vizinho em sucessores(nó):
-//       novo_g ← g[nó] + custo(nó,vizinho)
-//       se novo_g < g[vizinho]:
-//         g[vizinho] ← novo_g
-//         f ← novo_g + h(vizinho)
-//         fronteira.insere(vizinho, f)
-//   retorna falha
+// ---------------- Hill Climbing ----------------
 
-export const buscaAEstrela = (tabela: TabelaSudoku) => {
-    
-}
+// função HillClimbing(inicial, objetivo):
+//   atual ← inicial
+//   enquanto verdadeiro:
+//     vizinho ← melhor_vizinho(atual)  // menor h
+//     se h(vizinho) ≥ h(atual):
+//       retorna atual  // ótimo local (ou global)
+//     atual ← vizinho
+//     se atual = objetivo: retorna atual
+
+export const buscaHillClimbingEstocastica = (tabela: TabelaSudoku) => {
+  let tabelaCopia: TabelaSudoku = copiarTabela(tabela);
+  calcularPossibilidades(tabelaCopia);
+
+  let celulaAtual = maiorGrauDeRestricaoHillClimbing(tabelaCopia);
+
+  while (celulaAtual) {
+    let possibilidadeAleatoria =
+      celulaAtual.possibilidades[
+        Math.floor(Math.random() * celulaAtual.possibilidades.length)
+      ];
+    tabelaCopia[celulaAtual.linha][celulaAtual.coluna].valor =
+      possibilidadeAleatoria;
+    calcularPossibilidades(tabelaCopia);
+    celulaAtual = maiorGrauDeRestricaoHillClimbing(tabelaCopia);
+  }
+
+  return tabelaCopia;
+};

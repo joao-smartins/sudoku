@@ -2,6 +2,7 @@ import { blocoPermitidoPosInsercao, colunaPermitidaPosInsercao, linhaPermitidaPo
 import { TabelaSudoku, TabelaSudokuProps } from "@/app/utils/tipos";
 import BotaoTabela from "./BotaoTabela";
 import { buscaPorProfundidade } from "@/app/utils/buscasCegas";
+import { buscaHillClimbingEstocastica } from "@/app/utils/buscasInformadas";
 
 const Tabela = (props: TabelaSudokuProps) => {
   const { tabela, setTabela } = props;
@@ -143,6 +144,15 @@ const Tabela = (props: TabelaSudokuProps) => {
     }
   };
 
+  const handleBuscaHillClimbing = () => {
+    const tabelaResolvida = buscaHillClimbingEstocastica(tabela);
+    if (tabelaResolvida) {
+      setTabela(tabelaResolvida);
+    } else {
+      alert("Não foi possível resolver o Sudoku com busca Hill Climbing.");
+    }
+  }
+
 
 
   const classeBordaPorQuadrante = (linha: number, coluna: number) => {
@@ -158,6 +168,7 @@ const Tabela = (props: TabelaSudokuProps) => {
         <div className="flex justify-between gap-2">
           <button className={classeBotaoGenerico} onClick={() => revalidarTodasCelulas(tabela)}>Validar Celulas</button>
           <button className={classeBotaoGenerico} onClick={() => esvaziarTabela()}>Esvaziar Tabela</button>
+          <button className={classeBotaoGenerico} onClick={() => handleBuscaHillClimbing()}>Resolver com Busca Hill Climbing</button>
           <button className={classeBotaoGenerico} onClick={() => handleBuscaProfundidade()}>Resolver com Busca em Profundidade</button>
         </div>
       <br />
