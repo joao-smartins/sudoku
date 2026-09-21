@@ -334,3 +334,19 @@ export const retornarCelulaNaoPreenchidaAleatoria = (tabela: TabelaSudoku) => {
   );
   return {celula: celulasNaoPreenchidas[indexCelulaAleatoria], tamanho: celulasNaoPreenchidas.length};
 };
+
+export const tabelaPossuiCelulaInvalida = (tabela: TabelaSudoku) => {
+  let encontrou : boolean = false;
+  for (let i = 0; i < 9 && !encontrou; i++) {
+    for (let j = 0; j < 9 && !encontrou; j++) {
+      const celula = tabela[i][j];
+      if(celula.valor !== null){
+        const celulaValida = verificarCelulaPreInsercao(tabela, i, j, celula.valor);
+        if(!celulaValida){
+          encontrou = true;
+        }
+      }
+    }
+  }
+  return encontrou;
+}

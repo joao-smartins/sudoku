@@ -1,7 +1,13 @@
 import { buscaPorProfundidade } from "@/app/utils/buscasCegas";
 import { buscaHCEstocastica, buscaHCPrimeiraEscolha, buscaHCRecozimentoSimulado } from "@/app/utils/buscasInformadas";
-import { blocoPermitidoPosInsercao, colunaPermitidaPosInsercao, linhaPermitidaPosInsercao, verificarQualOBloco } from "@/app/utils/funcoes";
+import { blocoPermitidoPosInsercao, colunaPermitidaPosInsercao, linhaPermitidaPosInsercao, tabelaPossuiCelulaInvalida, verificarQualOBloco } from "@/app/utils/funcoes";
 import { TabelaSudoku, TabelaSudokuProps } from "@/app/utils/tipos";
+import {
+  carregarModelo,
+  SUDOKU_DIFICIL,
+  SUDOKU_FACIL,
+  SUDOKU_MEDIO,
+} from "@/app/utils/modelosSudoku";
 import BotaoTabela from "../Botao/BotaoTabela";
 
 const Tabela = (props: TabelaSudokuProps) => {
@@ -111,7 +117,25 @@ const Tabela = (props: TabelaSudokuProps) => {
     });
   }
 
+  const handleDeletarValorCelula = (linha: number, coluna: number) => {
+    setTabela((prevTabela) => {
+      if (!prevTabela) return undefined;
+      const novaTabela = [...prevTabela];
+      novaTabela[linha] = [...novaTabela[linha]];
+      novaTabela[linha][coluna] = {
+        ...novaTabela[linha][coluna],
+        valor: null,
+        permitida: true,
+      };
+      revalidarTodasCelulas(novaTabela);
+      return novaTabela;
+    });
+  }
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, linha: number, coluna: number) => {
+    if (e.key === "Backspace" || e.key === "Delete" || e.key === "0") {
+      handleDeletarValorCelula(linha, coluna);
+    }
     if (Number.isNaN(Number(e.key))) return;
     const novoValor = Number(e.key);
     if (novoValor < 1 || novoValor > 9) return;
@@ -135,7 +159,17 @@ const Tabela = (props: TabelaSudokuProps) => {
     });
   }
 
+  const verificarTabelaValida = () => {
+    const tabelaInvalida = tabelaPossuiCelulaInvalida(tabela);
+    if (tabelaInvalida) {
+      alert("A tabela possui células inválidas. Por favor, corrija-as antes de tentar resolver o Sudoku.");
+      return false;
+    }
+    return true;
+  }
+
   const handleBuscaProfundidade = () => {
+    if (!verificarTabelaValida()) return;
     const tabelaResolvida = buscaPorProfundidade(tabela);
     if (tabelaResolvida) {
       setTabela(tabelaResolvida);
@@ -145,6 +179,7 @@ const Tabela = (props: TabelaSudokuProps) => {
   };
 
   const handleBuscaHCEstocastica = () => {
+    if (!verificarTabelaValida()) return;
     const tabelaResolvida = buscaHCEstocastica(tabela);
     if (tabelaResolvida) {
       setTabela(tabelaResolvida);
@@ -154,6 +189,7 @@ const Tabela = (props: TabelaSudokuProps) => {
   }
 
   const handleBuscaHCPrimeiraEscolha = () => {
+    if (!verificarTabelaValida()) return;
     const tabelaResolvida = buscaHCPrimeiraEscolha(tabela);
     if (tabelaResolvida) {
       setTabela(tabelaResolvida);
@@ -163,6 +199,7 @@ const Tabela = (props: TabelaSudokuProps) => {
   };
 
   const handleBuscaHCRecozimentoSimulado = () => {
+    if (!verificarTabelaValida()) return;
     const tabelaResolvida = buscaHCRecozimentoSimulado(tabela);
     if (tabelaResolvida) {
       setTabela(tabelaResolvida);
@@ -171,7 +208,9 @@ const Tabela = (props: TabelaSudokuProps) => {
     }
   }
 
-
+  const handleCarregarModelo = (modelo: number[][]) => {
+    setTabela(carregarModelo(modelo));
+  };
 
   const classeBordaPorQuadrante = (linha: number, coluna: number) => {
     const bordaDireita = (coluna + 1) % 3 === 0 && coluna !== 8 ? "border-r-4" : "";
@@ -179,22 +218,25 @@ const Tabela = (props: TabelaSudokuProps) => {
     return `border border-gray-400 ${bordaDireita} ${bordaInferior}`;
   }
 
-  const classeBotaoGenerico = 'py-2 bg-gray-300 hover:bg-gray-600 hover:text-white px-3 rounded';
+  const classeBotaoGenerico = 'flex-1 py-2 bg-gray-300 hover:bg-gray-600 hover:text-white px-3 rounded';
 
   return (
     <div>
-        <div className="flex flex-col gap-2 max-w-118">
-          <div className="flex justify-between gap-2">
+        <div className="flex flex-col gap-2 max-w-73 sm:max-w-118">
+          <div className="flex flex-wrap justify-between gap-2">
             <button className={classeBotaoGenerico} onClick={() => revalidarTodasCelulas(tabela)}>Validar Celulas</button>
             <button className={classeBotaoGenerico} onClick={() => esvaziarTabela()}>Esvaziar Tabela</button>
-          
           </div>
-          <div  className="flex justify-between gap-2">
-              <button className={classeBotaoGenerico} onClick={() => handleBuscaHCEstocastica()}>Resolver com Busca HC Estocastica</button>
-              <button className={classeBotaoGenerico} onClick={() => handleBuscaHCPrimeiraEscolha()}>Resolver com Busca HC Primeira Escolha</button>
+          <div className="flex flex-wrap justify-between gap-2">
+            <button className={classeBotaoGenerico} onClick={() => handleCarregarModelo(SUDOKU_FACIL)}>Fácil</button>
+            <button className={classeBotaoGenerico} onClick={() => handleCarregarModelo(SUDOKU_MEDIO)}>Médio</button>
+            <button className={classeBotaoGenerico} onClick={() => handleCarregarModelo(SUDOKU_DIFICIL)}>Difícil</button>
+          </div>
+          <div  className="flex flex-wrap justify-between gap-2">
               <button className={classeBotaoGenerico} onClick={() => handleBuscaProfundidade()}>Resolver com Busca DFS</button>
-              <button className={classeBotaoGenerico} onClick={() => handleBuscaHCRecozimentoSimulado()}>Resolver com Busca HC Recozimento Simulado</button>
-          
+              <button className={classeBotaoGenerico} onClick={() => handleBuscaHCEstocastica()}>Busca HC Estocastica</button>
+              <button className={classeBotaoGenerico} onClick={() => handleBuscaHCPrimeiraEscolha()}>Busca HC Primeira Escolha</button>
+              <button className={classeBotaoGenerico} onClick={() => handleBuscaHCRecozimentoSimulado()}>Busca HC Recozimento Simulado</button>
           </div>
         </div>
       <br />
