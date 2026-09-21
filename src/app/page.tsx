@@ -6,6 +6,7 @@ import { preencherTabela } from "./utils/funcoes";
 
 export default function Home() {
   const [sudokuTable, setSudokuTable] = useState<TabelaSudoku | undefined>();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     preencherTabela(setSudokuTable);
@@ -13,7 +14,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center">
-      {sudokuTable && <Tabela tabela={sudokuTable} setTabela={setSudokuTable} />}
+      {sudokuTable && <Tabela tabela={sudokuTable} setTabela={setSudokuTable} isLoading={isLoading} setIsLoading={setIsLoading} />}
     </div>
   );
 }

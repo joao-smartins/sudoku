@@ -10,10 +10,19 @@ import {
 } from "@/app/utils/modelosSudoku";
 import BotaoTabela from "../Botao/BotaoTabela";
 
-const DELAY = 100; // Tempo de atraso em milissegundos
+const DELAY = 50;
+const ANIMADO = false; 
 
 const Tabela = (props: TabelaSudokuProps) => {
-  const { tabela, setTabela } = props;
+  const { tabela, setTabela, isLoading, setIsLoading } = props;
+
+  const Carregando = () => {
+    if(isLoading) {
+      alert("Aguarde a conclusão da resolução atual antes de iniciar uma nova.");
+      return true;
+    }
+    return false
+  }
 
   const semMaisPossibilidades = (linha: number, coluna: number) => {
     const celula = tabela[linha][coluna];
@@ -30,6 +39,7 @@ const Tabela = (props: TabelaSudokuProps) => {
   }
 
   const alocaoAnimadaComTimeout = (novaTabela: TabelaSudoku, delay: number, duracao: number = delay) => {
+    setIsLoading(true);
     for (let i = 0; i < 9; i++) {
       for (let j = 0; j < 9; j++) {
         const indice = i * 9 + j;
@@ -66,6 +76,9 @@ const Tabela = (props: TabelaSudokuProps) => {
         }, tempoDesativacao);
       }
     }
+    setTimeout(() => {
+      setIsLoading(false);
+    }, delay * 81 + duracao);
   };
 
 
@@ -195,6 +208,9 @@ const Tabela = (props: TabelaSudokuProps) => {
   }
 
   const verificarTabelaValida = () => {
+    if(isLoading) {
+      alert("Aguarde a conclusão da resolução atual antes de iniciar uma nova.");
+    }
     if (totalmentePreenchida(tabela)) {
       alert("A tabela já está totalmente preenchida. Não é necessário resolver o Sudoku.");
       return false;
@@ -207,8 +223,8 @@ const Tabela = (props: TabelaSudokuProps) => {
     return true;
   }
 
-  const modoExibicao = (animado: boolean, tabela: TabelaSudoku) => {
-    if (animado) {
+  const modoExibicao = ( tabela: TabelaSudoku) => {
+    if (ANIMADO) {
       alocaoAnimadaComTimeout(tabela, DELAY);
     }
     else {
@@ -221,7 +237,7 @@ const Tabela = (props: TabelaSudokuProps) => {
     const tabelaResolvida = buscaPorProfundidade(tabela);
     if (tabelaResolvida) {
       //setTabela(tabelaResolvida);
-      modoExibicao(true, tabelaResolvida);
+      modoExibicao(tabelaResolvida);
     } else {
       alert("Não foi possível resolver o Sudoku com busca em profundidade.");
     }
@@ -232,7 +248,7 @@ const Tabela = (props: TabelaSudokuProps) => {
     const tabelaResolvida = buscaHCEstocastica(tabela);
     if (tabelaResolvida) {
       //setTabela(tabelaResolvida);
-      modoExibicao(true, tabelaResolvida);
+      modoExibicao(tabelaResolvida);
     } else {
       alert("Não foi possível resolver o Sudoku com busca Hill Climbing.");
     }
@@ -243,7 +259,7 @@ const Tabela = (props: TabelaSudokuProps) => {
     const tabelaResolvida = buscaHCPrimeiraEscolha(tabela);
     if (tabelaResolvida) {
       //setTabela(tabelaResolvida);
-      modoExibicao(true, tabelaResolvida);
+      modoExibicao(tabelaResolvida);
     } else {
       alert("Não foi possível resolver o Sudoku com busca Hill Climbing.");
     }
@@ -254,7 +270,7 @@ const Tabela = (props: TabelaSudokuProps) => {
     const tabelaResolvida = buscaHCRecozimentoSimulado(tabela);
     if (tabelaResolvida) {
       //setTabela(tabelaResolvida);
-      modoExibicao(true, tabelaResolvida);
+      modoExibicao(tabelaResolvida);
     } else {
       alert("Não foi possível resolver o Sudoku com busca Hill Climbing.");
     }
@@ -276,19 +292,19 @@ const Tabela = (props: TabelaSudokuProps) => {
     <div>
         <div className="flex flex-col gap-2 max-w-73 sm:max-w-118">
           <div className="flex flex-wrap justify-between gap-2">
-            <button className={classeBotaoGenerico} onClick={() => revalidarTodasCelulas(tabela)}>Validar Celulas</button>
-            <button className={classeBotaoGenerico} onClick={() => esvaziarTabela()}>Esvaziar Tabela</button>
+            <button className={classeBotaoGenerico} onClick={() => !Carregando() && esvaziarTabela()}>Esvaziar Tabela</button>
+            <button className={classeBotaoGenerico} onClick={() => !Carregando() && revalidarTodasCelulas(tabela)}>Validar Celulas</button>
           </div>
           <div className="flex flex-wrap justify-between gap-2">
-            <button className={classeBotaoGenerico} onClick={() => handleCarregarModelo(SUDOKU_FACIL)}>Fácil</button>
-            <button className={classeBotaoGenerico} onClick={() => handleCarregarModelo(SUDOKU_MEDIO)}>Médio</button>
-            <button className={classeBotaoGenerico} onClick={() => handleCarregarModelo(SUDOKU_DIFICIL)}>Difícil</button>
+            <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleCarregarModelo(SUDOKU_FACIL)}>Fácil</button>
+            <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleCarregarModelo(SUDOKU_MEDIO)}>Médio</button>
+            <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleCarregarModelo(SUDOKU_DIFICIL)}>Difícil</button>
           </div>
           <div  className="flex flex-wrap justify-between gap-2">
-              <button className={classeBotaoGenerico} onClick={() => handleBuscaProfundidade()}>Resolver com Busca DFS</button>
-              <button className={classeBotaoGenerico} onClick={() => handleBuscaHCEstocastica()}>Busca HC Estocastica</button>
-              <button className={classeBotaoGenerico} onClick={() => handleBuscaHCPrimeiraEscolha()}>Busca HC Primeira Escolha</button>
-              <button className={classeBotaoGenerico} onClick={() => handleBuscaHCRecozimentoSimulado()}>Busca HC Recozimento Simulado</button>
+              <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaProfundidade()}>Resolver com Busca DFS</button>
+              <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaHCEstocastica()}>Busca HC Estocastica</button>
+              <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaHCPrimeiraEscolha()}>Busca HC Primeira Escolha</button>
+              <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaHCRecozimentoSimulado()}>Busca HC Recozimento Simulado</button>
           </div>
         </div>
       <br />

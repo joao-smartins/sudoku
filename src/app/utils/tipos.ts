@@ -12,6 +12,8 @@ export type TabelaSudoku = CelulaSudoku[][];
 export interface TabelaSudokuProps {
   tabela: TabelaSudoku;
   setTabela: React.Dispatch<React.SetStateAction<TabelaSudoku | undefined>>;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface BotaoTabelaProps {
