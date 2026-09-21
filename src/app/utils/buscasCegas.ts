@@ -3,6 +3,7 @@ import {
   proximaCelulaNaoPreenchida,
   retornarCelulaAnteriorVisitada,
   totalmentePreenchida,
+  tabelaPossuiCelulaInvalida,
   verificarCelulaPreInsercao,
 } from "./funcoes";
 import { CelulaSudoku, TabelaSudoku } from "./tipos";
@@ -44,7 +45,7 @@ export const buscaPorProfundidade = (tabela: TabelaSudoku) => {
     }
   }
 
-  let tempoInicial = new Date().getTime();
+  const tempoInicial = performance.now();
   let nosExpandidos = 0;
   let backtracking = 0;
 
@@ -99,22 +100,33 @@ export const buscaPorProfundidade = (tabela: TabelaSudoku) => {
         if (proximaCelula) {
           fronteira.push(proximaCelula);
         } else {
+          const tempoTotalMs = performance.now() - tempoInicial;
+          const tabelaCompleta = totalmentePreenchida(tabelaCopia);
+          const solucaoValida = tabelaCompleta && !tabelaPossuiCelulaInvalida(tabelaCopia);
+
           console.log("Solução encontrada!");
-          console.log(tabelaCopia);
+          console.log("Tabela:", tabelaCopia);
           console.log("Nós expandidos:", nosExpandidos);
-          console.log("Busca ótima:", totalmentePreenchida(tabelaCopia));
-          console.log("Tempo de execução:", new Date().getTime() - tempoInicial, "ms");
+          console.log("Tabela completa:", tabelaCompleta);
+          console.log("Solução válida:", solucaoValida);
+          console.log("Tempo de execução:", `${tempoTotalMs.toFixed(2)} ms`);
           console.log("Backtracking:", backtracking);
           return tabelaCopia;
         }
       }
     }
   }
-  console.log(tabela);
-  console.log(tabelaCopia);
-  console.log("Nos expandidos:", nosExpandidos);
-  console.log("Busca ótima:", totalmentePreenchida(tabelaCopia));
-  console.log("Tempo de execução:", new Date().getTime() - tempoInicial, "ms");
+
+  const tempoTotalMs = performance.now() - tempoInicial;
+  const tabelaCompleta = totalmentePreenchida(tabelaCopia);
+  const solucaoValida = tabelaCompleta && !tabelaPossuiCelulaInvalida(tabelaCopia);
+
+  console.log("Tabela original:", tabela);
+  console.log("Tabela final:", tabelaCopia);
+  console.log("Nós expandidos:", nosExpandidos);
+  console.log("Tabela completa:", tabelaCompleta);
+  console.log("Solução válida:", solucaoValida);
+  console.log("Tempo de execução:", `${tempoTotalMs.toFixed(2)} ms`);
   console.log("Backtracking:", backtracking);
   return null;
 };

@@ -1,4 +1,4 @@
-import { copiarTabela } from "./funcoes";
+import { copiarTabela, totalmentePreenchida, tabelaPossuiCelulaInvalida } from "./funcoes";
 import {
   calcularPossibilidades,
   MrvHCEstocastica,
@@ -20,8 +20,11 @@ const LIMITE = 9;
 //     se atual = objetivo: retorna atual
 
 export const buscaHCEstocastica = (tabela: TabelaSudoku) => {
+  const tempoInicial = performance.now();
   let tabelaCopia: TabelaSudoku = copiarTabela(tabela);
   calcularPossibilidades(tabelaCopia);
+
+  let nosExpandidos = 0;
 
   let celulaAtual = MrvHCEstocastica(tabelaCopia);
 
@@ -35,15 +38,29 @@ export const buscaHCEstocastica = (tabela: TabelaSudoku) => {
       possibilidadeAleatoria;
     calcularPossibilidades(tabelaCopia);
     celulaAtual = MrvHCEstocastica(tabelaCopia, restricaoAtual);
+    nosExpandidos++;
   }
 
+  const tempoTotalMs = performance.now() - tempoInicial;
+  const tabelaCompleta = totalmentePreenchida(tabelaCopia);
+  const solucaoValida = tabelaCompleta && !tabelaPossuiCelulaInvalida(tabelaCopia);
+
+  console.log("Tabela:", tabelaCopia);
+  console.log("Nós expandidos (iterações):", nosExpandidos);
+  console.log("Tabela completa:", tabelaCompleta);
+  console.log("Solução válida:", solucaoValida);
+  console.log("Tempo de execução:", `${tempoTotalMs.toFixed(2)} ms`);
+  console.log("Backtracking:", null, "(N/A para busca local)");
   return tabelaCopia;
 };
 
 
 export const buscaHCPrimeiraEscolha = (tabela: TabelaSudoku) => {
+  const tempoInicial = performance.now();
   let tabelaCopia: TabelaSudoku = copiarTabela(tabela);
   calcularPossibilidades(tabelaCopia);
+
+  let nosExpandidos = 0;
 
   let celulaAtual = MrvHCPrimeiraEscolha(tabelaCopia);
 
@@ -54,21 +71,35 @@ export const buscaHCPrimeiraEscolha = (tabela: TabelaSudoku) => {
       possibilidade;
     calcularPossibilidades(tabelaCopia);
     celulaAtual = MrvHCPrimeiraEscolha(tabelaCopia, restricaoAtual);
+    nosExpandidos++;
   }
+
+  const tempoTotalMs = performance.now() - tempoInicial;
+  const tabelaCompleta = totalmentePreenchida(tabelaCopia);
+  const solucaoValida = tabelaCompleta && !tabelaPossuiCelulaInvalida(tabelaCopia);
+
+  console.log("Tabela:", tabelaCopia);
+  console.log("Nós expandidos (iterações):", nosExpandidos);
+  console.log("Tabela completa:", tabelaCompleta);
+  console.log("Solução válida:", solucaoValida);
+  console.log("Tempo de execução:", `${tempoTotalMs.toFixed(2)} ms`);
+  console.log("Backtracking:", null, "(N/A para busca local)");
 
   return tabelaCopia;
 };
 
 
 export const buscaHCRecozimentoSimulado = (tabela: TabelaSudoku) => {
+  const tempoInicial = performance.now();
   let tabelaCopia: TabelaSudoku = copiarTabela(tabela);
   calcularPossibilidades(tabelaCopia);
   let temperatura = 9;
 
-  let celulaAtual = MrvHCRecozimentoSimulado(tabelaCopia, 10,temperatura);
+  let nosExpandidos = 0;
+
+  let celulaAtual = MrvHCRecozimentoSimulado(tabelaCopia, 10, temperatura);
 
   while (celulaAtual && celulaAtual?.possibilidades.length > 0) {
-
     let restricaoAtual = celulaAtual.possibilidades.length;
     let possibilidade = celulaAtual.possibilidades[0];
     tabelaCopia[celulaAtual.linha][celulaAtual.coluna].valor =
@@ -76,8 +107,19 @@ export const buscaHCRecozimentoSimulado = (tabela: TabelaSudoku) => {
     calcularPossibilidades(tabelaCopia);
     temperatura *= 0.95;
     celulaAtual = MrvHCRecozimentoSimulado(tabelaCopia, restricaoAtual, temperatura);
-    
+    nosExpandidos++;
   }
+
+  const tempoTotalMs = performance.now() - tempoInicial;
+  const tabelaCompleta = totalmentePreenchida(tabelaCopia);
+  const solucaoValida = tabelaCompleta && !tabelaPossuiCelulaInvalida(tabelaCopia);
+
+  console.log("Tabela:", tabelaCopia);
+  console.log("Nós expandidos (iterações):", nosExpandidos);
+  console.log("Tabela completa:", tabelaCompleta);
+  console.log("Solução válida:", solucaoValida);
+  console.log("Tempo de execução:", `${tempoTotalMs.toFixed(2)} ms`);
+  console.log("Backtracking:", null, "(N/A para busca local)");
 
   return tabelaCopia;
 };
