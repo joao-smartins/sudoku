@@ -2,7 +2,7 @@ import { buscaPorProfundidade } from "@/app/utils/buscasCegas";
 import { buscaHCEstocastica, buscaHCPrimeiraEscolha, buscaHCRecozimentoSimulado } from "@/app/utils/buscasInformadas";
 import { blocoPermitidoPosInsercao, colunaPermitidaPosInsercao, linhaPermitidaPosInsercao, verificarQualOBloco } from "@/app/utils/funcoes";
 import { TabelaSudoku, TabelaSudokuProps } from "@/app/utils/tipos";
-import BotaoTabela from "./BotaoTabela";
+import BotaoTabela from "../Botao/BotaoTabela";
 
 const Tabela = (props: TabelaSudokuProps) => {
   const { tabela, setTabela } = props;
