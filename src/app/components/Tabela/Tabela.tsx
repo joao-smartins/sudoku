@@ -109,7 +109,6 @@ const Tabela = (props: TabelaSudokuProps) => {
   }
 
   const revalidarTodasCelulas = (tabela: TabelaSudoku) => {
-    console.log(tabela)
     for (let i = 0; i < 9; i++) {
       for (let j = 0; j < 9; j++) {
         const celula = tabela[i][j];
@@ -190,7 +189,6 @@ const Tabela = (props: TabelaSudokuProps) => {
     if (novoValor < 1 || novoValor > 9) return;
     if(tabela[linha][coluna].valor === novoValor) {
       revalidarTodasCelulas(tabela);
-      console.log(tabela)
       return;
     }
 

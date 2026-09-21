@@ -2,6 +2,7 @@ import {
   copiarTabela,
   proximaCelulaNaoPreenchida,
   retornarCelulaAnteriorVisitada,
+  totalmentePreenchida,
   verificarCelulaPreInsercao,
 } from "./funcoes";
 import { CelulaSudoku, TabelaSudoku } from "./tipos";
@@ -26,6 +27,7 @@ export const buscaPorProfundidade = (tabela: TabelaSudoku) => {
   let visitados: CelulaSudoku[] = [];
   let encontrouSolucao = false;
 
+
   for (let i = 0; i < LIMITE && !encontrouSolucao; i++) {
     for (let j = 0; j < LIMITE && !encontrouSolucao; j++) {
       if (tabelaCopia[i][j].valor === null) {
@@ -42,11 +44,15 @@ export const buscaPorProfundidade = (tabela: TabelaSudoku) => {
     }
   }
 
+  let tempoInicial = new Date().getTime();
+  let nosExpandidos = 0;
+  let backtracking = 0;
+
   while (fronteira.length > 0) {
     const celulaAtual = fronteira.pop()!;
     if (celulaAtual) {
       let nenhumaCelulaValida = true;
-
+      nosExpandidos++;
       if (celulaAtual.possibilidades.length > 0) {
         for (let i = 0; i < celulaAtual.possibilidades.length && nenhumaCelulaValida; i++) {
           const valor = celulaAtual.possibilidades[i];
@@ -82,9 +88,10 @@ export const buscaPorProfundidade = (tabela: TabelaSudoku) => {
           anterior.possibilidades = anterior.possibilidades.filter(
             (p) => p !== valorAnterior,
           );
-
           fronteira.push(anterior);
+          backtracking++;
         }
+
       } else {
         visitados.push(celulaAtual);
 
@@ -94,6 +101,10 @@ export const buscaPorProfundidade = (tabela: TabelaSudoku) => {
         } else {
           console.log("Solução encontrada!");
           console.log(tabelaCopia);
+          console.log("Nós expandidos:", nosExpandidos);
+          console.log("Busca ótima:", totalmentePreenchida(tabelaCopia));
+          console.log("Tempo de execução:", new Date().getTime() - tempoInicial, "ms");
+          console.log("Backtracking:", backtracking);
           return tabelaCopia;
         }
       }
@@ -101,5 +112,9 @@ export const buscaPorProfundidade = (tabela: TabelaSudoku) => {
   }
   console.log(tabela);
   console.log(tabelaCopia);
+  console.log("Nos expandidos:", nosExpandidos);
+  console.log("Busca ótima:", totalmentePreenchida(tabelaCopia));
+  console.log("Tempo de execução:", new Date().getTime() - tempoInicial, "ms");
+  console.log("Backtracking:", backtracking);
   return null;
 };
