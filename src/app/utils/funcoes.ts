@@ -350,3 +350,15 @@ export const tabelaPossuiCelulaInvalida = (tabela: TabelaSudoku) => {
   }
   return encontrou;
 }
+
+export const totalmentePreenchida = (tabela: TabelaSudoku) => {
+  let totalmentePreenchida = true;
+  for (let i = 0; i < 9 && totalmentePreenchida; i++) {
+    for (let j = 0; j < 9 && totalmentePreenchida; j++) {
+      if (tabela[i][j].valor === null) {
+        totalmentePreenchida = false;
+      }
+    }
+  }
+  return totalmentePreenchida;
+}

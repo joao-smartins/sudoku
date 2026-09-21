@@ -1,6 +1,6 @@
 import { buscaPorProfundidade } from "@/app/utils/buscasCegas";
 import { buscaHCEstocastica, buscaHCPrimeiraEscolha, buscaHCRecozimentoSimulado } from "@/app/utils/buscasInformadas";
-import { blocoPermitidoPosInsercao, colunaPermitidaPosInsercao, linhaPermitidaPosInsercao, tabelaPossuiCelulaInvalida, verificarQualOBloco } from "@/app/utils/funcoes";
+import { blocoPermitidoPosInsercao, colunaPermitidaPosInsercao, linhaPermitidaPosInsercao, tabelaPossuiCelulaInvalida, totalmentePreenchida, verificarQualOBloco } from "@/app/utils/funcoes";
 import { TabelaSudoku, TabelaSudokuProps } from "@/app/utils/tipos";
 import {
   carregarModelo,
@@ -9,6 +9,8 @@ import {
   SUDOKU_MEDIO,
 } from "@/app/utils/modelosSudoku";
 import BotaoTabela from "../Botao/BotaoTabela";
+
+const DELAY = 100; // Tempo de atraso em milissegundos
 
 const Tabela = (props: TabelaSudokuProps) => {
   const { tabela, setTabela } = props;
@@ -26,6 +28,45 @@ const Tabela = (props: TabelaSudokuProps) => {
       return novaTabela;
     })
   }
+
+  const alocaoAnimadaComTimeout = (novaTabela: TabelaSudoku, delay: number, duracao: number = delay) => {
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {
+        const indice = i * 9 + j;
+        const tempoAtivacao = delay * indice;
+        const tempoDesativacao = tempoAtivacao + duracao;
+
+        setTimeout(() => {
+          let jaPossuiValor = tabela[i][j].valor === null || tabela[i][j].valor === undefined;
+          setTabela((prevTabela) => {
+            if (!prevTabela) return undefined;
+            const tabelaAtualizada = [...prevTabela];
+            tabelaAtualizada[i] = [...tabelaAtualizada[i]];
+            tabelaAtualizada[i][j] = {
+              ...novaTabela[i][j],
+              valor: novaTabela[i][j].valor,
+              selecionada: jaPossuiValor,
+            };
+            return tabelaAtualizada;
+          });
+        }, tempoAtivacao);
+
+        setTimeout(() => {
+          setTabela((prevTabela) => {
+            if (!prevTabela) return undefined;
+            const tabelaAtualizada = [...prevTabela];
+            tabelaAtualizada[i] = [...tabelaAtualizada[i]];
+            tabelaAtualizada[i][j] = {
+              ...novaTabela[i][j],
+              valor: novaTabela[i][j].valor,
+              selecionada: false,
+            };
+            return tabelaAtualizada;
+          });
+        }, tempoDesativacao);
+      }
+    }
+  };
 
 
   const revalidarCelula = (tabela: TabelaSudoku, linha: number, coluna: number, novoValor: number) => {
@@ -154,6 +195,10 @@ const Tabela = (props: TabelaSudokuProps) => {
   }
 
   const verificarTabelaValida = () => {
+    if (totalmentePreenchida(tabela)) {
+      alert("A tabela já está totalmente preenchida. Não é necessário resolver o Sudoku.");
+      return false;
+    }
     const tabelaInvalida = tabelaPossuiCelulaInvalida(tabela);
     if (tabelaInvalida) {
       alert("A tabela possui células inválidas. Por favor, corrija-as antes de tentar resolver o Sudoku.");
@@ -162,11 +207,21 @@ const Tabela = (props: TabelaSudokuProps) => {
     return true;
   }
 
+  const modoExibicao = (animado: boolean, tabela: TabelaSudoku) => {
+    if (animado) {
+      alocaoAnimadaComTimeout(tabela, DELAY);
+    }
+    else {
+      setTabela(tabela);
+    }
+  }
+
   const handleBuscaProfundidade = () => {
     if (!verificarTabelaValida()) return;
     const tabelaResolvida = buscaPorProfundidade(tabela);
     if (tabelaResolvida) {
-      setTabela(tabelaResolvida);
+      //setTabela(tabelaResolvida);
+      modoExibicao(true, tabelaResolvida);
     } else {
       alert("Não foi possível resolver o Sudoku com busca em profundidade.");
     }
@@ -176,7 +231,8 @@ const Tabela = (props: TabelaSudokuProps) => {
     if (!verificarTabelaValida()) return;
     const tabelaResolvida = buscaHCEstocastica(tabela);
     if (tabelaResolvida) {
-      setTabela(tabelaResolvida);
+      //setTabela(tabelaResolvida);
+      modoExibicao(true, tabelaResolvida);
     } else {
       alert("Não foi possível resolver o Sudoku com busca Hill Climbing.");
     }
@@ -186,7 +242,8 @@ const Tabela = (props: TabelaSudokuProps) => {
     if (!verificarTabelaValida()) return;
     const tabelaResolvida = buscaHCPrimeiraEscolha(tabela);
     if (tabelaResolvida) {
-      setTabela(tabelaResolvida);
+      //setTabela(tabelaResolvida);
+      modoExibicao(true, tabelaResolvida);
     } else {
       alert("Não foi possível resolver o Sudoku com busca Hill Climbing.");
     }
@@ -196,7 +253,8 @@ const Tabela = (props: TabelaSudokuProps) => {
     if (!verificarTabelaValida()) return;
     const tabelaResolvida = buscaHCRecozimentoSimulado(tabela);
     if (tabelaResolvida) {
-      setTabela(tabelaResolvida);
+      //setTabela(tabelaResolvida);
+      modoExibicao(true, tabelaResolvida);
     } else {
       alert("Não foi possível resolver o Sudoku com busca Hill Climbing.");
     }
