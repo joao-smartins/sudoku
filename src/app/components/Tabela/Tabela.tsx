@@ -1,8 +1,8 @@
+import { buscaPorProfundidade } from "@/app/utils/buscasCegas";
+import { buscaHCEstocastica, buscaHCPrimeiraEscolha, buscaHCRecozimentoSimulado } from "@/app/utils/buscasInformadas";
 import { blocoPermitidoPosInsercao, colunaPermitidaPosInsercao, linhaPermitidaPosInsercao, verificarQualOBloco } from "@/app/utils/funcoes";
 import { TabelaSudoku, TabelaSudokuProps } from "@/app/utils/tipos";
 import BotaoTabela from "./BotaoTabela";
-import { buscaPorProfundidade } from "@/app/utils/buscasCegas";
-import { buscaHillClimbingEstocastica } from "@/app/utils/buscasInformadas";
 
 const Tabela = (props: TabelaSudokuProps) => {
   const { tabela, setTabela } = props;
@@ -144,8 +144,26 @@ const Tabela = (props: TabelaSudokuProps) => {
     }
   };
 
-  const handleBuscaHillClimbing = () => {
-    const tabelaResolvida = buscaHillClimbingEstocastica(tabela);
+  const handleBuscaHCEstocastica = () => {
+    const tabelaResolvida = buscaHCEstocastica(tabela);
+    if (tabelaResolvida) {
+      setTabela(tabelaResolvida);
+    } else {
+      alert("Não foi possível resolver o Sudoku com busca Hill Climbing.");
+    }
+  }
+
+  const handleBuscaHCPrimeiraEscolha = () => {
+    const tabelaResolvida = buscaHCPrimeiraEscolha(tabela);
+    if (tabelaResolvida) {
+      setTabela(tabelaResolvida);
+    } else {
+      alert("Não foi possível resolver o Sudoku com busca Hill Climbing.");
+    }
+  };
+
+  const handleBuscaHCRecozimentoSimulado = () => {
+    const tabelaResolvida = buscaHCRecozimentoSimulado(tabela);
     if (tabelaResolvida) {
       setTabela(tabelaResolvida);
     } else {
@@ -165,11 +183,19 @@ const Tabela = (props: TabelaSudokuProps) => {
 
   return (
     <div>
-        <div className="flex justify-between gap-2">
-          <button className={classeBotaoGenerico} onClick={() => revalidarTodasCelulas(tabela)}>Validar Celulas</button>
-          <button className={classeBotaoGenerico} onClick={() => esvaziarTabela()}>Esvaziar Tabela</button>
-          <button className={classeBotaoGenerico} onClick={() => handleBuscaHillClimbing()}>Resolver com Busca Hill Climbing</button>
-          <button className={classeBotaoGenerico} onClick={() => handleBuscaProfundidade()}>Resolver com Busca em Profundidade</button>
+        <div className="flex flex-col gap-2 max-w-118">
+          <div className="flex justify-between gap-2">
+            <button className={classeBotaoGenerico} onClick={() => revalidarTodasCelulas(tabela)}>Validar Celulas</button>
+            <button className={classeBotaoGenerico} onClick={() => esvaziarTabela()}>Esvaziar Tabela</button>
+          
+          </div>
+          <div  className="flex justify-between gap-2">
+              <button className={classeBotaoGenerico} onClick={() => handleBuscaHCEstocastica()}>Resolver com Busca HC Estocastica</button>
+              <button className={classeBotaoGenerico} onClick={() => handleBuscaHCPrimeiraEscolha()}>Resolver com Busca HC Primeira Escolha</button>
+              <button className={classeBotaoGenerico} onClick={() => handleBuscaProfundidade()}>Resolver com Busca DFS</button>
+              <button className={classeBotaoGenerico} onClick={() => handleBuscaHCRecozimentoSimulado()}>Resolver com Busca HC Recozimento Simulado</button>
+          
+          </div>
         </div>
       <br />
       <br />

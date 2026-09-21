@@ -295,7 +295,6 @@ export const proximaCelulaNaoPreenchida: (
   return null;
 };
 
-
 export const retornarCelulaAnteriorVisitada = (
   tabela: TabelaSudoku,
   linha: number,
@@ -313,4 +312,25 @@ export const retornarCelulaAnteriorVisitada = (
     return ultimaCelula;
   }
   return null;
-}
+};
+
+export const retornarCelulaNaoPreenchidaAleatoria = (tabela: TabelaSudoku) => {
+  let celulasNaoPreenchidas: CelulaSudoku[] = [];
+
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      if (tabela[i][j].valor === null) {
+        celulasNaoPreenchidas.push(tabela[i][j]);
+      }
+    }
+  }
+
+  if (celulasNaoPreenchidas.length === 0) {
+    return null;
+  }
+
+  let indexCelulaAleatoria = Math.floor(
+    Math.random() * celulasNaoPreenchidas.length,
+  );
+  return {celula: celulasNaoPreenchidas[indexCelulaAleatoria], tamanho: celulasNaoPreenchidas.length};
+};
