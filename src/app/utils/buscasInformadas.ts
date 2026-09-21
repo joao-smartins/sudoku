@@ -24,9 +24,8 @@ export const buscaHCEstocastica = (tabela: TabelaSudoku) => {
   calcularPossibilidades(tabelaCopia);
 
   let celulaAtual = MrvHCEstocastica(tabelaCopia);
-  let restricaoAtual = celulaAtual?.possibilidades.length;
 
-  while (celulaAtual && restricaoAtual && restricaoAtual > 0) {
+  while (celulaAtual && celulaAtual?.possibilidades.length > 0) {
     let restricaoAtual = celulaAtual.possibilidades.length;
     let possibilidadeAleatoria =
       celulaAtual.possibilidades[

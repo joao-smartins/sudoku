@@ -13,30 +13,20 @@ import BotaoTabela from "../Botao/BotaoTabela";
 const Tabela = (props: TabelaSudokuProps) => {
   const { tabela, setTabela } = props;
 
-  // const validarCelula = (tebelaAtualizada: TabelaSudoku, linha: number, coluna: number, novoValor: number) => {
-  //   const linhaValida = linhaPermitidaInserida(tebelaAtualizada, linha);
-  //   const colunaValida = colunaPermitidaInserida(tebelaAtualizada, coluna);
-  //   const blocoUtilizado = verificarQualOBloco(linha, coluna);
+  const semMaisPossibilidades = (linha: number, coluna: number) => {
+    const celula = tabela[linha][coluna];
+    setTabela((prevTabela) => {
+      if (!prevTabela) return undefined;
+      const novaTabela = [...prevTabela];
+      novaTabela[linha] = [...novaTabela[linha]];
+      novaTabela[linha][coluna] = {
+        ...novaTabela[linha][coluna],
+        permitida: celula.possibilidades.length !== 0,
+      };
+      return novaTabela;
+    })
+  }
 
-  //   if (!blocoUtilizado) return;
-  //   const blocoValido = blocoPermitidoInserido(
-  //     tebelaAtualizada,
-  //     blocoUtilizado.linhaInicial,
-  //     blocoUtilizado.colunaInicial,
-  //     novoValor
-  //   );
-
-  //   setTabela((prevTabela) => {
-  //     if (!prevTabela) return undefined;
-  //     const novaTabela = [...prevTabela];
-  //     novaTabela[linha] = [...novaTabela[linha]];
-  //     novaTabela[linha][coluna] = {
-  //       ...novaTabela[linha][coluna],
-  //       permitida: linhaValida && colunaValida && blocoValido,
-  //     };
-  //     return novaTabela;
-  //   });
-  // }
 
   const revalidarCelula = (tabela: TabelaSudoku, linha: number, coluna: number, novoValor: number) => {
 
@@ -65,12 +55,16 @@ const Tabela = (props: TabelaSudokuProps) => {
   }
 
   const revalidarTodasCelulas = (tabela: TabelaSudoku) => {
+    console.log(tabela)
     for (let i = 0; i < 9; i++) {
       for (let j = 0; j < 9; j++) {
         const celula = tabela[i][j];
-        if (celula.valor !== null) {
+        if (celula.valor !== null && celula.valor !== undefined) {
           revalidarCelula(tabela, i, j, celula.valor);
         }
+        // else{
+        //   semMaisPossibilidades(i, j);
+        // }
       }
     }
   }
@@ -97,6 +91,7 @@ const Tabela = (props: TabelaSudokuProps) => {
           valor: null,
           permitida: true,
           selecionada: false,
+          possibilidades: [1, 2, 3, 4, 5, 6, 7, 8, 9],
         }))
       );
       return novaTabela;
@@ -153,7 +148,6 @@ const Tabela = (props: TabelaSudokuProps) => {
         ...novaTabela[linha][coluna],
         valor: novoValor,
       };
-      //validarCelula(novaTabela, linha, coluna, novoValor);
       revalidarTodasCelulas(novaTabela);
       return novaTabela;
     });

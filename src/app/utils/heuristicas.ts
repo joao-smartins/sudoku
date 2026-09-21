@@ -31,7 +31,7 @@ export const MrvHCEstocastica = (
   for (let i = 0; i < LIMITE; i++) {
     for (let j = 0; j < LIMITE; j++) {
         const celula = tabela[i][j];
-        if (celula.valor === null && celula.possibilidades.length < maiorRestricao) {
+        if (celula.valor === null && celula.possibilidades.length > 0 && celula.possibilidades.length < maiorRestricao) {
             celulasComMaiorRestricao.push(celula);
         }
     }
@@ -56,7 +56,7 @@ export const MrvHCPrimeiraEscolha = (
   for (let i = 0; i < LIMITE && !encontrou; i++) {
     for (let j = 0; j < LIMITE && !encontrou; j++) {
         const celula = tabela[i][j];
-        if (celula.valor === null && celula.possibilidades.length < maiorRestricao) {
+        if (celula.valor === null && celula.possibilidades.length > 0 && celula.possibilidades.length < maiorRestricao) {
             celulasComMaiorRestricao = celula;
             encontrou = true;
         }
@@ -110,13 +110,13 @@ export const MrvHCReinicioAleatorio = (
 //   s0 = solucaoInicial()
 //   T = 100
 //   while T > eps:
-//   s = estadoVizinhoAleatorio(s0)
-//   if f(s) > f(s0):
-//      s0 = s
-//   else:
-//      if random() <= exp((f(s)-f(s0))/T):
+//     s = estadoVizinhoAleatorio(s0)
+//     if f(s) > f(s0):
+//       s0 = s
+//     else:
+//       if random() <= exp((f(s)-f(s0))/T):
 //         s0 = s
-//    T = reduz(T)
+//     T = reduz(T)
 
 
 
