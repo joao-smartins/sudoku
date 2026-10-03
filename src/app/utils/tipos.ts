@@ -31,3 +31,12 @@ export type Metricas = {
   nosExpandidos: number;
   backtracking: number | null;
 }
+
+export interface ParametrosMetricas {
+  tabela: TabelaSudoku;
+  tempoInicial: number;
+  tempoFinal: number;
+  nosExpandidos: number;
+  backtracking?: number | null;
+  setMetricas?: React.Dispatch<React.SetStateAction<Metricas | undefined>>;
+}

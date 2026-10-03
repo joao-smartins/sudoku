@@ -254,7 +254,7 @@ const Tabela = (props: TabelaSudokuProps) => {
 
   const handleBuscaHCEstocastica = () => {
     if (!verificarTabelaValida()) return;
-    const tabelaResolvida = buscaHCEstocastica(tabela);
+    const tabelaResolvida = buscaHCEstocastica(tabela, setMetricas);
     if (tabelaResolvida) {
       //setTabela(tabelaResolvida);
       modoExibicao(tabelaResolvida);
@@ -265,7 +265,7 @@ const Tabela = (props: TabelaSudokuProps) => {
 
   const handleBuscaHCPrimeiraEscolha = () => {
     if (!verificarTabelaValida()) return;
-    const tabelaResolvida = buscaHCPrimeiraEscolha(tabela);
+    const tabelaResolvida = buscaHCPrimeiraEscolha(tabela, setMetricas);
     if (tabelaResolvida) {
       //setTabela(tabelaResolvida);
       modoExibicao(tabelaResolvida);
@@ -276,7 +276,7 @@ const Tabela = (props: TabelaSudokuProps) => {
 
   const handleBuscaHCRecozimentoSimulado = () => {
     if (!verificarTabelaValida()) return;
-    const tabelaResolvida = buscaHCRecozimentoSimulado(tabela);
+    const tabelaResolvida = buscaHCRecozimentoSimulado(tabela, setMetricas);
     if (tabelaResolvida) {
       //setTabela(tabelaResolvida);
       modoExibicao(tabelaResolvida);
@@ -287,7 +287,7 @@ const Tabela = (props: TabelaSudokuProps) => {
 
   const handleBuscaBestFirst = () => {
     if (!verificarTabelaValida()) return;
-    const tabelaResolvida = buscaBestFirst(tabela);
+    const tabelaResolvida = buscaBestFirst(tabela, setMetricas);
     if (tabelaResolvida) {
       //setTabela(tabelaResolvida);
       modoExibicao(tabelaResolvida);

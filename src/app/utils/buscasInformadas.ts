@@ -10,7 +10,7 @@ import {
   MrvHCPrimeiraEscolha,
   MrvHCRecozimentoSimulado,
 } from "./heuristicas";
-import { CelulaSudoku, TabelaSudoku } from "./tipos";
+import { CelulaSudoku, Metricas, ParametrosMetricas, TabelaSudoku } from "./tipos";
 const LIMITE = 9;
 
 // ---------------- Hill Climbing ----------------
@@ -24,7 +24,10 @@ const LIMITE = 9;
 //     atual ← vizinho
 //     se atual = objetivo: retorna atual
 
-export const buscaHCEstocastica = (tabela: TabelaSudoku) => {
+export const buscaHCEstocastica = (
+  tabela: TabelaSudoku,
+  setMetricas?: React.Dispatch<React.SetStateAction<Metricas | undefined>>
+) => {
   const tempoInicial = performance.now();
   let tabelaCopia: TabelaSudoku = copiarTabela(tabela);
   calcularPossibilidades(tabelaCopia);
@@ -43,22 +46,22 @@ export const buscaHCEstocastica = (tabela: TabelaSudoku) => {
     celulaAtual = MrvHCEstocastica(tabelaCopia, restricaoAtual);
     nosExpandidos++;
   }
+  let tempoFinal = performance.now();
+  processarMetricas({
+    tabela: tabelaCopia,
+    tempoInicial,
+    tempoFinal: tempoFinal,
+    nosExpandidos,
+    setMetricas,
+  });
 
-  const tempoTotalMs = performance.now() - tempoInicial;
-  const tabelaCompleta = totalmentePreenchida(tabelaCopia);
-  const solucaoValida =
-    tabelaCompleta && !tabelaPossuiCelulaInvalida(tabelaCopia);
-
-  console.log("Tabela:", tabelaCopia);
-  console.log("Nós expandidos (iterações):", nosExpandidos);
-  console.log("Tabela completa:", tabelaCompleta);
-  console.log("Solução válida:", solucaoValida);
-  console.log("Tempo de execução:", `${tempoTotalMs.toFixed(2)} ms`);
-  console.log("Backtracking:", null, "(N/A para busca local)");
   return tabelaCopia;
 };
 
-export const buscaHCPrimeiraEscolha = (tabela: TabelaSudoku) => {
+export const buscaHCPrimeiraEscolha = (
+  tabela: TabelaSudoku,
+  setMetricas?: React.Dispatch<React.SetStateAction<Metricas | undefined>>
+) => {
   const tempoInicial = performance.now();
   let tabelaCopia: TabelaSudoku = copiarTabela(tabela);
   calcularPossibilidades(tabelaCopia);
@@ -75,23 +78,22 @@ export const buscaHCPrimeiraEscolha = (tabela: TabelaSudoku) => {
     celulaAtual = MrvHCPrimeiraEscolha(tabelaCopia, restricaoAtual);
     nosExpandidos++;
   }
-
-  const tempoTotalMs = performance.now() - tempoInicial;
-  const tabelaCompleta = totalmentePreenchida(tabelaCopia);
-  const solucaoValida =
-    tabelaCompleta && !tabelaPossuiCelulaInvalida(tabelaCopia);
-
-  console.log("Tabela:", tabelaCopia);
-  console.log("Nós expandidos (iterações):", nosExpandidos);
-  console.log("Tabela completa:", tabelaCompleta);
-  console.log("Solução válida:", solucaoValida);
-  console.log("Tempo de execução:", `${tempoTotalMs.toFixed(2)} ms`);
-  console.log("Backtracking:", null, "(N/A para busca local)");
+  let tempoFinal = performance.now();
+  processarMetricas({
+    tabela: tabelaCopia,
+    tempoInicial,
+    tempoFinal,
+    nosExpandidos,
+    setMetricas,
+  });
 
   return tabelaCopia;
 };
 
-export const buscaHCRecozimentoSimulado = (tabela: TabelaSudoku) => {
+export const buscaHCRecozimentoSimulado = (
+  tabela: TabelaSudoku,
+  setMetricas?: React.Dispatch<React.SetStateAction<Metricas | undefined>>
+) => {
   const tempoInicial = performance.now();
   let tabelaCopia: TabelaSudoku = copiarTabela(tabela);
   calcularPossibilidades(tabelaCopia);
@@ -114,18 +116,14 @@ export const buscaHCRecozimentoSimulado = (tabela: TabelaSudoku) => {
     );
     nosExpandidos++;
   }
-
-  const tempoTotalMs = performance.now() - tempoInicial;
-  const tabelaCompleta = totalmentePreenchida(tabelaCopia);
-  const solucaoValida =
-    tabelaCompleta && !tabelaPossuiCelulaInvalida(tabelaCopia);
-
-  console.log("Tabela:", tabelaCopia);
-  console.log("Nós expandidos (iterações):", nosExpandidos);
-  console.log("Tabela completa:", tabelaCompleta);
-  console.log("Solução válida:", solucaoValida);
-  console.log("Tempo de execução:", `${tempoTotalMs.toFixed(2)} ms`);
-  console.log("Backtracking:", null, "(N/A para busca local)");
+  let tempoFinal = performance.now();
+  processarMetricas({
+    tabela: tabelaCopia,
+    tempoInicial,
+    tempoFinal: tempoFinal,
+    nosExpandidos,
+    setMetricas,
+  });
 
   return tabelaCopia;
 };
@@ -142,10 +140,15 @@ export const buscaHCRecozimentoSimulado = (tabela: TabelaSudoku) => {
 //       fronteira.insere(vizinho, h(vizinho))
 //   retorna falha
 
-export const buscaBestFirst = (tabela: TabelaSudoku) => {
+export const buscaBestFirst = (
+  tabela: TabelaSudoku,
+  setMetricas?: React.Dispatch<React.SetStateAction<Metricas | undefined>>
+) => {
+  const tempoInicial = performance.now();
   let tabelaCopia: TabelaSudoku = copiarTabela(tabela);
   calcularPossibilidades(tabelaCopia);
 
+  let nosExpandidos = 0;
   let fronteira: CelulaSudoku[] = [];
   fronteira.push(mrvBestFirst(tabelaCopia));
 
@@ -160,8 +163,50 @@ export const buscaBestFirst = (tabela: TabelaSudoku) => {
       if (novaCelula !== null) {
         fronteira.push(novaCelula);
       }
+      nosExpandidos++;
     }
   }
-  console.log(tabelaCopia);
+  let tempoFinal = performance.now();
+  processarMetricas({
+    tabela: tabelaCopia,
+    tempoInicial,
+    tempoFinal,
+    nosExpandidos,
+    setMetricas,
+  });
+
   return tabelaCopia;
+};
+
+
+
+export const processarMetricas = ({
+  tabela,
+  tempoInicial,
+  tempoFinal,
+  nosExpandidos,
+  backtracking = null,
+  setMetricas,
+}: ParametrosMetricas) => {
+  const tempoTotalMs = tempoFinal - tempoInicial;
+  const tabelaCompleta = totalmentePreenchida(tabela);
+  const solucaoValida = tabelaCompleta && !tabelaPossuiCelulaInvalida(tabela);
+
+  console.log("Tabela:", tabela);
+  console.log("Nós expandidos:", nosExpandidos);
+  console.log("Tabela completa:", tabelaCompleta);
+  console.log("Solução válida:", solucaoValida);
+  console.log("Tempo de execução:", `${tempoTotalMs.toFixed(2)} ms`);
+  console.log(
+    "Backtracking:",
+    backtracking !== null ? backtracking : "N/A"
+  );
+
+  if (setMetricas) {
+    setMetricas({
+      tempoExecucao: tempoTotalMs,
+      nosExpandidos: nosExpandidos,
+      backtracking: backtracking,
+    });
+  }
 };
