@@ -150,3 +150,26 @@ export const MrvHCRecozimentoSimulado = (
   }
 
 };
+
+const ordenarFilaPorPrioridade = (fila: CelulaSudoku[]) => {
+  return fila.sort((a, b) => a.possibilidades.length - b.possibilidades.length);
+}
+
+export const mrvBestFirst = (tabela: TabelaSudoku) => {
+  let filaPorPrioridade: CelulaSudoku[] = [];
+
+  for (let i = 0; i < LIMITE; i++) {
+    for (let j = 0; j < LIMITE; j++) {
+      const celula = tabela[i][j];
+      if (
+        celula.valor === null
+        && celula.possibilidades.length > 0
+      ){
+        filaPorPrioridade.push(celula);
+      }
+    }
+  }
+  filaPorPrioridade = ordenarFilaPorPrioridade(filaPorPrioridade);
+
+  return filaPorPrioridade[0];
+};

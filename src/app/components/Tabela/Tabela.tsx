@@ -1,5 +1,5 @@
 import { buscaPorProfundidade } from "@/app/utils/buscasCegas";
-import { buscaHCEstocastica, buscaHCPrimeiraEscolha, buscaHCRecozimentoSimulado } from "@/app/utils/buscasInformadas";
+import { buscaBestFirst, buscaHCEstocastica, buscaHCPrimeiraEscolha, buscaHCRecozimentoSimulado } from "@/app/utils/buscasInformadas";
 import { blocoPermitidoPosInsercao, colunaPermitidaPosInsercao, linhaPermitidaPosInsercao, tabelaPossuiCelulaInvalida, totalmentePreenchida, verificarQualOBloco } from "@/app/utils/funcoes";
 import { TabelaSudoku, TabelaSudokuProps } from "@/app/utils/tipos";
 import {
@@ -285,6 +285,18 @@ const Tabela = (props: TabelaSudokuProps) => {
     }
   }
 
+  const handleBuscaBestFirst = () => {
+    if (!verificarTabelaValida()) return;
+    const tabelaResolvida = buscaBestFirst(tabela);
+    if (tabelaResolvida) {
+      //setTabela(tabelaResolvida);
+      modoExibicao(tabelaResolvida);
+    }
+    else{
+      alert("Não foi possível resolver o Sudoku com busca Best First.");
+    }
+  }
+
   const handleCarregarModelo = (modelo: number[][]) => {
     setTabela(carregarModelo(modelo));
   };
@@ -316,6 +328,9 @@ const Tabela = (props: TabelaSudokuProps) => {
                   <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaHCEstocastica()}>Busca HC Estocastica</button>
                   <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaHCPrimeiraEscolha()}>Busca HC Primeira Escolha</button>
                   <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaHCRecozimentoSimulado()}>Busca HC Recozimento Simulado</button>
+              </div>
+              <div  className="flex flex-wrap justify-between gap-2">
+                 <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaBestFirst()}>Busca Best First</button>
               </div>
             </div>
           <br />
