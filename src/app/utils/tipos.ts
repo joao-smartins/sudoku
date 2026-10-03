@@ -14,6 +14,8 @@ export interface TabelaSudokuProps {
   setTabela: React.Dispatch<React.SetStateAction<TabelaSudoku | undefined>>;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  metricas?: Metricas;
+  setMetricas?: React.Dispatch<React.SetStateAction<Metricas | undefined>>;
 }
 
 export interface BotaoTabelaProps {
@@ -22,4 +24,10 @@ export interface BotaoTabelaProps {
   onClick?: () => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
   onFocus?: () => void;
+}
+
+export type Metricas = {
+  tempoExecucao: number;
+  nosExpandidos: number;
+  backtracking: number | null;
 }

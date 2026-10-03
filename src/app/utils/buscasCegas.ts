@@ -6,7 +6,7 @@ import {
   tabelaPossuiCelulaInvalida,
   verificarCelulaPreInsercao,
 } from "./funcoes";
-import { CelulaSudoku, TabelaSudoku } from "./tipos";
+import { CelulaSudoku, Metricas, TabelaSudoku } from "./tipos";
 const LIMITE = 9;
 
 // Busca em Profundidade
@@ -22,7 +22,7 @@ const LIMITE = 9;
 //         fronteira.empilha(vizinho)
 //   retorna falha
 
-export const buscaPorProfundidade = (tabela: TabelaSudoku) => {
+export const buscaPorProfundidade = (tabela: TabelaSudoku, setMetricas?: React.Dispatch<React.SetStateAction<Metricas | undefined>>) => {
   let tabelaCopia: TabelaSudoku = copiarTabela(tabela);
   let fronteira: CelulaSudoku[] = [];
   let visitados: CelulaSudoku[] = [];
@@ -111,6 +111,13 @@ export const buscaPorProfundidade = (tabela: TabelaSudoku) => {
           console.log("Solução válida:", solucaoValida);
           console.log("Tempo de execução:", `${tempoTotalMs.toFixed(2)} ms`);
           console.log("Backtracking:", backtracking);
+          if (setMetricas) {
+            setMetricas({
+              tempoExecucao: tempoTotalMs,
+              nosExpandidos: nosExpandidos,
+              backtracking: backtracking,
+            });
+          }
           return tabelaCopia;
         }
       }
@@ -128,5 +135,12 @@ export const buscaPorProfundidade = (tabela: TabelaSudoku) => {
   console.log("Solução válida:", solucaoValida);
   console.log("Tempo de execução:", `${tempoTotalMs.toFixed(2)} ms`);
   console.log("Backtracking:", backtracking);
+  if (setMetricas) {
+    setMetricas({
+      tempoExecucao: tempoTotalMs,
+      nosExpandidos: nosExpandidos,
+      backtracking: backtracking,
+    });
+  }
   return null;
 };

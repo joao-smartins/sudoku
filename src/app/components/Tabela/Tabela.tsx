@@ -14,14 +14,25 @@ const DELAY = 50;
 const ANIMADO = false; 
 
 const Tabela = (props: TabelaSudokuProps) => {
-  const { tabela, setTabela, isLoading, setIsLoading } = props;
+  const { tabela, setTabela, isLoading, setIsLoading, metricas, setMetricas } = props;
 
-  const Carregando = () => {
+  const Carregando = (flag : boolean = true) => {
+    if(flag) {
+      limparMetricas();
+    }
     if(isLoading) {
       alert("Aguarde a conclusão da resolução atual antes de iniciar uma nova.");
       return true;
     }
     return false
+  }
+
+  const limparMetricas = () => {
+    setMetricas && setMetricas({
+      tempoExecucao: 0,
+      nosExpandidos: 0,
+      backtracking: null,
+    });
   }
 
   const semMaisPossibilidades = (linha: number, coluna: number) => {
@@ -232,7 +243,7 @@ const Tabela = (props: TabelaSudokuProps) => {
 
   const handleBuscaProfundidade = () => {
     if (!verificarTabelaValida()) return;
-    const tabelaResolvida = buscaPorProfundidade(tabela);
+    const tabelaResolvida = buscaPorProfundidade(tabela, setMetricas);
     if (tabelaResolvida) {
       //setTabela(tabelaResolvida);
       modoExibicao(tabelaResolvida);
@@ -287,40 +298,53 @@ const Tabela = (props: TabelaSudokuProps) => {
   const classeBotaoGenerico = 'flex-1 py-2 bg-gray-300 hover:bg-gray-600 hover:text-white px-3 rounded';
 
   return (
-    <div>
-        <div className="flex flex-col gap-2 max-w-73 sm:max-w-118">
-          <div className="flex flex-wrap justify-between gap-2">
-            <button className={classeBotaoGenerico} onClick={() => !Carregando() && esvaziarTabela()}>Esvaziar Tabela</button>
-            <button className={classeBotaoGenerico} onClick={() => !Carregando() && revalidarTodasCelulas(tabela)}>Validar Celulas</button>
-          </div>
-          <div className="flex flex-wrap justify-between gap-2">
-            <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleCarregarModelo(SUDOKU_FACIL)}>Fácil</button>
-            <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleCarregarModelo(SUDOKU_MEDIO)}>Médio</button>
-            <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleCarregarModelo(SUDOKU_DIFICIL)}>Difícil</button>
-          </div>
-          <div  className="flex flex-wrap justify-between gap-2">
-              <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaProfundidade()}>Resolver com Busca DFS</button>
-              <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaHCEstocastica()}>Busca HC Estocastica</button>
-              <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaHCPrimeiraEscolha()}>Busca HC Primeira Escolha</button>
-              <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaHCRecozimentoSimulado()}>Busca HC Recozimento Simulado</button>
-          </div>
-        </div>
-      <br />
-      <br />
-      <table className="border-collapse border-4 border-gray-400 h-67.5 w-67.5 sm:h-112.5 sm:w-112.5">
-        <tbody>
-          {tabela.map((linha, i) => (
-            <tr key={i}>
-              {linha.map((celula, j) => (
-                <td key={j} className={classeBordaPorQuadrante(i, j)}>
-                  <BotaoTabela celula={celula} onFocus={() => handleClick(i, j)}  onClick={() => handleClick(i, j)} onKeyDown={(e) => handleKeyDown(e, i, j)} />
-                </td>
+    <>
+      <div className="flex flex-row">
+        <div>
+            <div className="flex flex-col gap-2 max-w-73 sm:max-w-118">
+              <div className="flex flex-wrap justify-between gap-2">
+                <button className={classeBotaoGenerico} onClick={() => !Carregando() && esvaziarTabela()}>Esvaziar Tabela</button>
+                <button className={classeBotaoGenerico} onClick={() => !Carregando(false) && revalidarTodasCelulas(tabela)}>Validar Celulas</button>
+              </div>
+              <div className="flex flex-wrap justify-between gap-2">
+                <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleCarregarModelo(SUDOKU_FACIL)}>Fácil</button>
+                <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleCarregarModelo(SUDOKU_MEDIO)}>Médio</button>
+                <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleCarregarModelo(SUDOKU_DIFICIL)}>Difícil</button>
+              </div>
+              <div  className="flex flex-wrap justify-between gap-2">
+                  <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaProfundidade()}>Resolver com Busca DFS</button>
+                  <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaHCEstocastica()}>Busca HC Estocastica</button>
+                  <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaHCPrimeiraEscolha()}>Busca HC Primeira Escolha</button>
+                  <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaHCRecozimentoSimulado()}>Busca HC Recozimento Simulado</button>
+              </div>
+            </div>
+          <br />
+          <br />
+          <table className="border-collapse border-4 border-gray-400 h-67.5 w-67.5 sm:h-112.5 sm:w-112.5">
+            <tbody>
+              {tabela.map((linha, i) => (
+                <tr key={i}>
+                  {linha.map((celula, j) => (
+                    <td key={j} className={classeBordaPorQuadrante(i, j)}>
+                      <BotaoTabela celula={celula} onFocus={() => handleClick(i, j)}  onClick={() => handleClick(i, j)} onKeyDown={(e) => handleKeyDown(e, i, j)} />
+                    </td>
+                  ))}
+                </tr>
               ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+            </tbody>
+          </table>
+            </div>
+            <div className="flex flex-col gap-1 pl-4 justify-center flex-wrap">
+              <span className="text-sm sm:text-base">Tempo de execução: {metricas?.tempoExecucao.toFixed(2)} ms</span>
+              <br />
+              <span className="text-sm sm:text-base">Nós expandidos: {metricas?.nosExpandidos}</span>
+              <br />
+              <span className="text-sm sm:text-base">Backtracking: {metricas?.backtracking ? metricas?.backtracking : "Não"}</span>
+              <br />
+              <span className="text-sm sm:text-base">Tabela completa: {totalmentePreenchida(tabela) ? "Sim" : "Não"}</span>
+            </div>
+      </div>
+    </>
   );
 };
 export default Tabela;
