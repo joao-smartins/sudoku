@@ -171,5 +171,5 @@ export const mrvBestFirst = (tabela: TabelaSudoku) => {
   }
   filaPorPrioridade = ordenarFilaPorPrioridade(filaPorPrioridade);
 
-  return filaPorPrioridade[0];
+  return filaPorPrioridade.shift();
 };

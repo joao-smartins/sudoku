@@ -13,7 +13,7 @@ const BotaoTabela = (props: BotaoTabelaProps) => {
       onClick={onClick}
       onKeyDown={onKeyDown}
       onFocus={onFocus}
-      className={`h-7.5 w-7.5 sm:h-12.5 sm:w-12.5 p-0 flex items-center justify-center hover:bg-blue-100 ${classeCelula}`}
+      className={`h-7.5 w-7.5 sm:h-12.5 sm:w-12.5 p-0 flex items-center justify-center hover:bg-blue-100 hover:cursor-pointer ${classeCelula}`}
     >
       {celula.valor}
     </button>

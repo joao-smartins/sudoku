@@ -150,8 +150,10 @@ export const buscaBestFirst = (
 
   let nosExpandidos = 0;
   let fronteira: CelulaSudoku[] = [];
-  fronteira.push(mrvBestFirst(tabelaCopia));
-
+  let primeiraCelula = mrvBestFirst(tabelaCopia);
+  if (primeiraCelula ) {
+    fronteira.push(primeiraCelula);
+  }
   while (fronteira.length > 0) {
     let celulaAtual = fronteira.shift();
     if (celulaAtual && celulaAtual.possibilidades.length > 0) {
@@ -160,7 +162,7 @@ export const buscaBestFirst = (
       tabelaCopia[celulaAtual.linha][celulaAtual.coluna].valor = possibilidade;
       calcularPossibilidades(tabelaCopia);
       let novaCelula = mrvBestFirst(tabelaCopia);
-      if (novaCelula !== null) {
+      if (novaCelula) {
         fronteira.push(novaCelula);
       }
       nosExpandidos++;

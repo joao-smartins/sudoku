@@ -307,7 +307,7 @@ const Tabela = (props: TabelaSudokuProps) => {
     return `border border-gray-400 ${bordaDireita} ${bordaInferior}`;
   }
 
-  const classeBotaoGenerico = 'flex-1 py-2 bg-gray-300 hover:bg-gray-600 hover:text-white px-3 rounded';
+  const classeBotaoGenerico = 'flex-1 py-1 bg-gray-300 hover:bg-gray-600 hover:text-white px-2 rounded hover:cursor-pointer';
 
   return (
     <>
@@ -333,7 +333,6 @@ const Tabela = (props: TabelaSudokuProps) => {
                  <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaBestFirst()}>Busca Best First</button>
               </div>
             </div>
-          <br />
           <br />
           <table className="border-collapse border-4 border-gray-400 h-67.5 w-67.5 sm:h-112.5 sm:w-112.5">
             <tbody>
