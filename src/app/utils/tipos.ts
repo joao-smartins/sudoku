@@ -24,6 +24,8 @@ export interface BotaoTabelaProps {
   onClick?: () => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
   onFocus?: () => void;
+  ref?: React.Ref<HTMLButtonElement>;
+  alt?: string;
 }
 
 export type Metricas = {

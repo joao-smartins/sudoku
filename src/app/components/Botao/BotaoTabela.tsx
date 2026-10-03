@@ -1,6 +1,6 @@
 import { BotaoTabelaProps } from "@/app/utils/tipos";
 const BotaoTabela = (props: BotaoTabelaProps) => {
-  const { celula, onClick, onKeyDown, onFocus } = props;
+  const { celula, onClick, onKeyDown, onFocus, ref, alt } = props;
 
   const classeCelula = celula.selecionada && celula.permitida
     ? "bg-blue-300 hover:bg-blue-500! text-white"
@@ -10,9 +10,11 @@ const BotaoTabela = (props: BotaoTabelaProps) => {
 
   return (
     <button
+      ref={ref}
       onClick={onClick}
       onKeyDown={onKeyDown}
       onFocus={onFocus}
+      aria-label={alt}
       className={`h-7.5 w-7.5 sm:h-12.5 sm:w-12.5 p-0 flex items-center justify-center hover:bg-blue-100 hover:cursor-pointer ${classeCelula}`}
     >
       {celula.valor}

@@ -9,12 +9,14 @@ import {
   SUDOKU_MEDIO,
 } from "@/app/utils/modelosSudoku";
 import BotaoTabela from "../Botao/BotaoTabela";
+import { useRef } from "react";
 
 const DELAY = 50;
 const ANIMADO = false; 
 
 const Tabela = (props: TabelaSudokuProps) => {
   const { tabela, setTabela, isLoading, setIsLoading, metricas, setMetricas } = props;
+  const celulasRef = useRef<(HTMLButtonElement | null)[][]>([]);
 
   const Carregando = (flag : boolean = true) => {
     if(flag) {
@@ -191,9 +193,35 @@ const Tabela = (props: TabelaSudokuProps) => {
     });
   }
 
+  const handleMoverSeta = (direcao: string, linha: number, coluna: number) => {
+    let novaLinha = linha;
+    let novaColuna = coluna;
+    switch (direcao) {
+      case "ArrowUp":
+        novaLinha = linha === 0 ? linha : linha - 1;
+        break;
+      case "ArrowDown":
+        novaLinha = linha === 8 ? linha : linha + 1;
+        break;
+      case "ArrowLeft":
+        novaColuna = coluna === 0 ? coluna : coluna - 1;
+        break;
+      case "ArrowRight":
+        novaColuna = coluna === 8 ? coluna : coluna + 1;
+        break;
+    }
+    // O foco dispara o onFocus do botão, que já seleciona a célula via handleClick.
+    celulasRef.current[novaLinha]?.[novaColuna]?.focus();
+  }
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, linha: number, coluna: number) => {
     if (e.key === "Backspace" || e.key === "Delete" || e.key === "0") {
       handleDeletarValorCelula(linha, coluna);
+      return;
+    }
+    if(e.key == "ArrowUp" || e.key == "ArrowDown" || e.key == "ArrowLeft" || e.key == "ArrowRight") {
+      handleMoverSeta(e.key, linha, coluna);
+      return;
     }
     if (Number.isNaN(Number(e.key))) return;
     const novoValor = Number(e.key);
@@ -340,7 +368,16 @@ const Tabela = (props: TabelaSudokuProps) => {
                 <tr key={i}>
                   {linha.map((celula, j) => (
                     <td key={j} className={classeBordaPorQuadrante(i, j)}>
-                      <BotaoTabela celula={celula} onFocus={() => handleClick(i, j)}  onClick={() => handleClick(i, j)} onKeyDown={(e) => handleKeyDown(e, i, j)} />
+                      <BotaoTabela
+                        ref={(el) => {
+                          (celulasRef.current[i] ??= [])[j] = el;
+                        }}
+                        alt={`linha ${i}, coluna ${j}`}
+                        celula={celula}
+                        onFocus={() => handleClick(i, j)}
+                        onClick={() => handleClick(i, j)}
+                        onKeyDown={(e) => handleKeyDown(e, i, j)}
+                      />
                     </td>
                   ))}
                 </tr>
