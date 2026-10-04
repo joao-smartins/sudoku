@@ -42,3 +42,24 @@ export interface ParametrosMetricas {
   backtracking?: number | null;
   setMetricas?: React.Dispatch<React.SetStateAction<Metricas | undefined>>;
 }
+
+export type BarraMetricasProps = {
+  metricas?: Metricas;
+  tabela: TabelaSudoku;
+};
+
+
+export interface BarraConfiguracoesProps {
+  tabela: TabelaSudoku;
+  isLoading: boolean;
+  esvaziarTabela: () => void;
+  revalidarTodasCelulas: (tabela: TabelaSudoku) => void;
+  handleCarregarModelo: (modelo: number[][]) => void;
+  handleBuscaProfundidade: () => void;
+  handleBuscaHCEstocastica: () => void;
+  handleBuscaHCPrimeiraEscolha: () => void;
+  handleBuscaHCRecozimentoSimulado: () => void;
+  handleBuscaBestFirst: () => void;
+  limparMetricas?: () => void;
+  primeiroBotaoRef?: React.Ref<HTMLButtonElement>;
+}

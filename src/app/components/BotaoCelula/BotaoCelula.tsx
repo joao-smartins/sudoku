@@ -1,5 +1,5 @@
 import { BotaoTabelaProps } from "@/app/utils/tipos";
-const BotaoTabela = (props: BotaoTabelaProps) => {
+const BotaoCelula = (props: BotaoTabelaProps) => {
   const { celula, onClick, onKeyDown, onFocus, ref, alt } = props;
 
   const classeCelula = celula.selecionada && celula.permitida
@@ -21,4 +21,4 @@ const BotaoTabela = (props: BotaoTabelaProps) => {
     </button>
   );
 };
-export default BotaoTabela;
+export default BotaoCelula;

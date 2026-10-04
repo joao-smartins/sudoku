@@ -23,6 +23,7 @@ const LIMITE = 9;
 //   retorna falha
 
 export const buscaPorProfundidade = (tabela: TabelaSudoku, setMetricas?: React.Dispatch<React.SetStateAction<Metricas | undefined>>) => {
+  const tempoInicial = performance.now();
   let tabelaCopia: TabelaSudoku = copiarTabela(tabela);
   let fronteira: CelulaSudoku[] = [];
   let visitados: CelulaSudoku[] = [];
@@ -45,7 +46,6 @@ export const buscaPorProfundidade = (tabela: TabelaSudoku, setMetricas?: React.D
     }
   }
 
-  const tempoInicial = performance.now();
   let nosExpandidos = 0;
   let backtracking = 0;
 

@@ -1,15 +1,14 @@
 import { buscaPorProfundidade } from "@/app/utils/buscasCegas";
 import { buscaBestFirst, buscaHCEstocastica, buscaHCPrimeiraEscolha, buscaHCRecozimentoSimulado } from "@/app/utils/buscasInformadas";
 import { blocoPermitidoPosInsercao, colunaPermitidaPosInsercao, linhaPermitidaPosInsercao, tabelaPossuiCelulaInvalida, totalmentePreenchida, verificarQualOBloco } from "@/app/utils/funcoes";
-import { TabelaSudoku, TabelaSudokuProps } from "@/app/utils/tipos";
 import {
-  carregarModelo,
-  SUDOKU_DIFICIL,
-  SUDOKU_FACIL,
-  SUDOKU_MEDIO,
+    carregarModelo
 } from "@/app/utils/modelosSudoku";
-import BotaoTabela from "../Botao/BotaoTabela";
+import { TabelaSudoku, TabelaSudokuProps } from "@/app/utils/tipos";
 import { useRef } from "react";
+import BarraConfiguracoes from "../BarraConfiguracoes/BarraConfiguracoes";
+import BarraMetricas from "../BarraMetricas/BarraMetricas";
+import BotaoTabela from "../BotaoCelula/BotaoCelula";
 
 const DELAY = 50;
 const ANIMADO = false; 
@@ -17,6 +16,7 @@ const ANIMADO = false;
 const Tabela = (props: TabelaSudokuProps) => {
   const { tabela, setTabela, isLoading, setIsLoading, metricas, setMetricas } = props;
   const celulasRef = useRef<(HTMLButtonElement | null)[][]>([]);
+  const primeiroBotaoRef = useRef<HTMLButtonElement>(null);
 
   const Carregando = (flag : boolean = true) => {
     if(flag) {
@@ -35,20 +35,6 @@ const Tabela = (props: TabelaSudokuProps) => {
       nosExpandidos: 0,
       backtracking: null,
     });
-  }
-
-  const semMaisPossibilidades = (linha: number, coluna: number) => {
-    const celula = tabela[linha][coluna];
-    setTabela((prevTabela) => {
-      if (!prevTabela) return undefined;
-      const novaTabela = [...prevTabela];
-      novaTabela[linha] = [...novaTabela[linha]];
-      novaTabela[linha][coluna] = {
-        ...novaTabela[linha][coluna],
-        permitida: celula.possibilidades.length !== 0,
-      };
-      return novaTabela;
-    })
   }
 
   const alocaoAnimadaComTimeout = (novaTabela: TabelaSudoku, delay: number, duracao: number = delay) => {
@@ -128,9 +114,6 @@ const Tabela = (props: TabelaSudokuProps) => {
         if (celula.valor !== null && celula.valor !== undefined) {
           revalidarCelula(tabela, i, j, celula.valor);
         }
-        // else{
-        //   semMaisPossibilidades(i, j);
-        // }
       }
     }
   }
@@ -223,6 +206,15 @@ const Tabela = (props: TabelaSudokuProps) => {
       handleMoverSeta(e.key, linha, coluna);
       return;
     }
+
+    if (e.key === "Escape") {
+      limparSelecionadas();
+      (document.activeElement as HTMLElement)?.blur();
+      document.getElementById("primeiro")?.focus();
+      primeiroBotaoRef.current?.focus();
+      return;
+    }
+
     if (Number.isNaN(Number(e.key))) return;
     const novoValor = Number(e.key);
     if (novoValor < 1 || novoValor > 9) return;
@@ -273,7 +265,6 @@ const Tabela = (props: TabelaSudokuProps) => {
     if (!verificarTabelaValida()) return;
     const tabelaResolvida = buscaPorProfundidade(tabela, setMetricas);
     if (tabelaResolvida) {
-      //setTabela(tabelaResolvida);
       modoExibicao(tabelaResolvida);
     } else {
       alert("Não foi possível resolver o Sudoku com busca em profundidade.");
@@ -284,7 +275,6 @@ const Tabela = (props: TabelaSudokuProps) => {
     if (!verificarTabelaValida()) return;
     const tabelaResolvida = buscaHCEstocastica(tabela, setMetricas);
     if (tabelaResolvida) {
-      //setTabela(tabelaResolvida);
       modoExibicao(tabelaResolvida);
     } else {
       alert("Não foi possível resolver o Sudoku com busca Hill Climbing.");
@@ -295,7 +285,6 @@ const Tabela = (props: TabelaSudokuProps) => {
     if (!verificarTabelaValida()) return;
     const tabelaResolvida = buscaHCPrimeiraEscolha(tabela, setMetricas);
     if (tabelaResolvida) {
-      //setTabela(tabelaResolvida);
       modoExibicao(tabelaResolvida);
     } else {
       alert("Não foi possível resolver o Sudoku com busca Hill Climbing.");
@@ -306,7 +295,6 @@ const Tabela = (props: TabelaSudokuProps) => {
     if (!verificarTabelaValida()) return;
     const tabelaResolvida = buscaHCRecozimentoSimulado(tabela, setMetricas);
     if (tabelaResolvida) {
-      //setTabela(tabelaResolvida);
       modoExibicao(tabelaResolvida);
     } else {
       alert("Não foi possível resolver o Sudoku com busca Hill Climbing.");
@@ -317,7 +305,6 @@ const Tabela = (props: TabelaSudokuProps) => {
     if (!verificarTabelaValida()) return;
     const tabelaResolvida = buscaBestFirst(tabela, setMetricas);
     if (tabelaResolvida) {
-      //setTabela(tabelaResolvida);
       modoExibicao(tabelaResolvida);
     }
     else{
@@ -335,67 +322,52 @@ const Tabela = (props: TabelaSudokuProps) => {
     return `border border-gray-400 ${bordaDireita} ${bordaInferior}`;
   }
 
-  const classeBotaoGenerico = 'flex-1 py-1 bg-gray-300 hover:bg-gray-600 hover:text-white px-2 rounded hover:cursor-pointer';
-
   return (
-    <>
-      <div className="flex flex-row">
-        <div>
-            <div className="flex flex-col gap-2 max-w-73 sm:max-w-118">
-              <div className="flex flex-wrap justify-between gap-2">
-                <button className={classeBotaoGenerico} onClick={() => !Carregando() && esvaziarTabela()}>Esvaziar Tabela</button>
-                <button className={classeBotaoGenerico} onClick={() => !Carregando(false) && revalidarTodasCelulas(tabela)}>Validar Celulas</button>
-              </div>
-              <div className="flex flex-wrap justify-between gap-2">
-                <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleCarregarModelo(SUDOKU_FACIL)}>Fácil</button>
-                <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleCarregarModelo(SUDOKU_MEDIO)}>Médio</button>
-                <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleCarregarModelo(SUDOKU_DIFICIL)}>Difícil</button>
-              </div>
-              <div  className="flex flex-wrap justify-between gap-2">
-                  <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaProfundidade()}>Resolver com Busca DFS</button>
-                  <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaHCEstocastica()}>Busca HC Estocastica</button>
-                  <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaHCPrimeiraEscolha()}>Busca HC Primeira Escolha</button>
-                  <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaHCRecozimentoSimulado()}>Busca HC Recozimento Simulado</button>
-              </div>
-              <div  className="flex flex-wrap justify-between gap-2">
-                 <button className={classeBotaoGenerico} onClick={() => !Carregando() && handleBuscaBestFirst()}>Busca Best First</button>
-              </div>
-            </div>
-          <br />
-          <table className="border-collapse border-4 border-gray-400 h-67.5 w-67.5 sm:h-112.5 sm:w-112.5">
-            <tbody>
-              {tabela.map((linha, i) => (
-                <tr key={i}>
-                  {linha.map((celula, j) => (
-                    <td key={j} className={classeBordaPorQuadrante(i, j)}>
-                      <BotaoTabela
-                        ref={(el) => {
-                          (celulasRef.current[i] ??= [])[j] = el;
-                        }}
-                        alt={`linha ${i}, coluna ${j}`}
-                        celula={celula}
-                        onFocus={() => handleClick(i, j)}
-                        onClick={() => handleClick(i, j)}
-                        onKeyDown={(e) => handleKeyDown(e, i, j)}
-                      />
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-            </div>
-            <div className="flex flex-col gap-1 pl-4 justify-center flex-wrap">
-              <span className="text-sm sm:text-base">Tempo de execução: {metricas?.tempoExecucao.toFixed(2)} ms</span>
-              <br />
-              <span className="text-sm sm:text-base">Nós expandidos: {metricas?.nosExpandidos}</span>
-              <br />
-              <span className="text-sm sm:text-base">Backtracking: {metricas?.backtracking ? metricas?.backtracking : "Não"}</span>
-              <br />
-              <span className="text-sm sm:text-base">Tabela completa: {totalmentePreenchida(tabela) ? "Sim" : "Não"}</span>
-            </div>
+    <section id="sudoku" className="flex flex-row">
+      <div id="tabela-container">
+        <BarraConfiguracoes
+          tabela={tabela}
+          isLoading={isLoading}
+          esvaziarTabela={esvaziarTabela}
+          revalidarTodasCelulas={revalidarTodasCelulas}
+          handleCarregarModelo={handleCarregarModelo}
+          handleBuscaProfundidade={handleBuscaProfundidade}
+          handleBuscaHCEstocastica={handleBuscaHCEstocastica}
+          handleBuscaHCPrimeiraEscolha={handleBuscaHCPrimeiraEscolha}
+          handleBuscaHCRecozimentoSimulado={handleBuscaHCRecozimentoSimulado}
+          handleBuscaBestFirst={handleBuscaBestFirst}
+          limparMetricas={limparMetricas}
+          primeiroBotaoRef={primeiroBotaoRef}
+        />
+        <br />
+        <table
+          id="tabela"
+          className="border-collapse border-4 border-gray-400 h-67.5 w-67.5 sm:h-112.5 sm:w-112.5"
+        >
+          <tbody>
+            {tabela.map((linha, i) => (
+              <tr key={i}>
+                {linha.map((celula, j) => (
+                  <td key={j} className={classeBordaPorQuadrante(i, j)}>
+                    <BotaoTabela
+                      ref={(el) => { 
+                        (celulasRef.current[i] ??= [])[j] = el;
+                      }}
+                      alt={`linha ${i}, coluna ${j}`}
+                      celula={celula}
+                      onFocus={() => handleClick(i, j)}
+                      onClick={() => handleClick(i, j)}
+                      onKeyDown={(e) => handleKeyDown(e, i, j)}
+                    />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-    </>
+      <BarraMetricas metricas={metricas} tabela={tabela} />
+    </section>
   );
 };
 export default Tabela;
