@@ -1,12 +1,11 @@
-import BotaoControle from "../BotaoControle/BotaoControle";
-import { BarraConfiguracoesProps, TabelaSudoku } from "@/app/utils/tipos";
-import {
-  carregarModelo,
-  SUDOKU_DIFICIL,
-  SUDOKU_FACIL,
-  SUDOKU_MEDIO,
-} from "@/app/utils/modelosSudoku";
 import { totalmentePreenchida, validarSeHaSolucao } from "@/app/utils/funcoes";
+import {
+    SUDOKU_DIFICIL,
+    SUDOKU_FACIL,
+    SUDOKU_MEDIO
+} from "@/app/utils/modelosSudoku";
+import { BarraConfiguracoesProps } from "@/app/utils/tipos";
+import BotaoControle from "../BotaoControle/BotaoControle";
 
 const BarraConfiguracoes = ({
   tabela,
@@ -22,10 +21,12 @@ const BarraConfiguracoes = ({
   limparMetricas,
   primeiroBotaoRef,
   setTabelaAnterior,
-  retornarEstadoAnterior
+  retornarEstadoAnterior,
 }: BarraConfiguracoesProps) => {
-
-  const verificarBloqueio = (limpar: boolean = true, validarSolucao: boolean = true) => {
+  const verificarBloqueio = (
+    limpar: boolean = true,
+    validarSolucao: boolean = true,
+  ) => {
     if (limpar && limparMetricas) {
       limparMetricas();
     }
@@ -35,10 +36,12 @@ const BarraConfiguracoes = ({
       );
       return true;
     }
-    if (validarSolucao && !totalmentePreenchida(tabela) && !validarSeHaSolucao(tabela)) {
-      alert(
-        "A tabela não possui solução. Por favor, altere o estado inicial.",
-      );
+    if (
+      validarSolucao &&
+      !totalmentePreenchida(tabela) &&
+      !validarSeHaSolucao(tabela)
+    ) {
+      alert("A tabela não possui solução. Por favor, altere o estado inicial.");
       return true;
     }
     setTabelaAnterior?.([...tabela]);
@@ -64,7 +67,9 @@ const BarraConfiguracoes = ({
         />
         <BotaoControle
           texto="Retornar Estado Anterior"
-          onClick={() => !verificarBloqueio(true, false) && retornarEstadoAnterior?.()}
+          onClick={() =>
+            !verificarBloqueio(true, false) && retornarEstadoAnterior?.()
+          }
         />
       </div>
       <div className="flex flex-wrap justify-between gap-2">

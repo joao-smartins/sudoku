@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 import { Metricas, TabelaSudoku } from "./utils/tipos";
 import Tabela from "./components/Tabela/Tabela";
@@ -8,7 +8,9 @@ export default function Home() {
   const [sudokuTable, setSudokuTable] = useState<TabelaSudoku | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const [metricas, setMetricas] = useState<Metricas | undefined>();
-  const [tabelaAnterior, setTabelaAnterior] = useState<TabelaSudoku | undefined>();
+  const [tabelaAnterior, setTabelaAnterior] = useState<
+    TabelaSudoku | undefined
+  >();
   useEffect(() => {
     preencherTabela(setSudokuTable);
   }, []);

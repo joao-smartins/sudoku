@@ -1,17 +1,17 @@
 import { buscaPorProfundidade } from "@/app/utils/buscasCegas";
 import {
-  buscaBestFirst,
-  buscaHCEstocastica,
-  buscaHCPrimeiraEscolha,
-  buscaHCRecozimentoSimulado,
+    buscaBestFirst,
+    buscaHCEstocastica,
+    buscaHCPrimeiraEscolha,
+    buscaHCRecozimentoSimulado,
 } from "@/app/utils/buscasInformadas";
 import {
-  blocoPermitidoPosInsercao,
-  colunaPermitidaPosInsercao,
-  linhaPermitidaPosInsercao,
-  tabelaPossuiCelulaInvalida,
-  totalmentePreenchida,
-  verificarQualOBloco,
+    blocoPermitidoPosInsercao,
+    colunaPermitidaPosInsercao,
+    linhaPermitidaPosInsercao,
+    tabelaPossuiCelulaInvalida,
+    totalmentePreenchida,
+    verificarQualOBloco,
 } from "@/app/utils/funcoes";
 import { carregarModelo } from "@/app/utils/modelosSudoku";
 import { TabelaSudoku, TabelaSudokuProps } from "@/app/utils/tipos";
@@ -24,8 +24,16 @@ const DELAY = 50;
 const ANIMADO = false;
 
 const Tabela = (props: TabelaSudokuProps) => {
-  const { tabela, setTabela, isLoading, setIsLoading, metricas, setMetricas, tabelaAnterior, setTabelaAnterior } =
-    props;
+  const {
+    tabela,
+    setTabela,
+    isLoading,
+    setIsLoading,
+    metricas,
+    setMetricas,
+    tabelaAnterior,
+    setTabelaAnterior,
+  } = props;
   const celulasRef = useRef<(HTMLButtonElement | null)[][]>([]);
   const primeiroBotaoRef = useRef<HTMLButtonElement>(null);
 
