@@ -1,17 +1,17 @@
 import { buscaPorProfundidade } from "@/app/utils/buscasCegas";
 import {
-    buscaBestFirst,
-    buscaHCEstocastica,
-    buscaHCPrimeiraEscolha,
-    buscaHCRecozimentoSimulado,
+  buscaBestFirst,
+  buscaHCEstocastica,
+  buscaHCPrimeiraEscolha,
+  buscaHCRecozimentoSimulado,
 } from "@/app/utils/buscasInformadas";
 import {
-    blocoPermitidoPosInsercao,
-    colunaPermitidaPosInsercao,
-    linhaPermitidaPosInsercao,
-    tabelaPossuiCelulaInvalida,
-    totalmentePreenchida,
-    verificarQualOBloco,
+  blocoPermitidoPosInsercao,
+  colunaPermitidaPosInsercao,
+  linhaPermitidaPosInsercao,
+  tabelaPossuiCelulaInvalida,
+  totalmentePreenchida,
+  verificarQualOBloco,
 } from "@/app/utils/funcoes";
 import { carregarModelo } from "@/app/utils/modelosSudoku";
 import { TabelaSudoku, TabelaSudokuProps } from "@/app/utils/tipos";
@@ -365,28 +365,28 @@ const Tabela = (props: TabelaSudokuProps) => {
   };
 
   return (
-    <section id="sudoku" className="flex flex-row">
-      <div id="tabela-container">
-        <BarraConfiguracoes
-          tabela={tabela}
-          isLoading={isLoading}
-          esvaziarTabela={esvaziarTabela}
-          revalidarTodasCelulas={revalidarTodasCelulas}
-          handleCarregarModelo={handleCarregarModelo}
-          handleBuscaProfundidade={handleBuscaProfundidade}
-          handleBuscaHCEstocastica={handleBuscaHCEstocastica}
-          handleBuscaHCPrimeiraEscolha={handleBuscaHCPrimeiraEscolha}
-          handleBuscaHCRecozimentoSimulado={handleBuscaHCRecozimentoSimulado}
-          handleBuscaBestFirst={handleBuscaBestFirst}
-          limparMetricas={limparMetricas}
-          primeiroBotaoRef={primeiroBotaoRef}
-          setTabelaAnterior={setTabelaAnterior}
-          retornarEstadoAnterior={retornarEstadoAnterior}
-        />
-        <br />
+    <div id="tabela-container" className="flex flex-col">
+      <BarraConfiguracoes
+        tabela={tabela}
+        isLoading={isLoading}
+        esvaziarTabela={esvaziarTabela}
+        revalidarTodasCelulas={revalidarTodasCelulas}
+        handleCarregarModelo={handleCarregarModelo}
+        handleBuscaProfundidade={handleBuscaProfundidade}
+        handleBuscaHCEstocastica={handleBuscaHCEstocastica}
+        handleBuscaHCPrimeiraEscolha={handleBuscaHCPrimeiraEscolha}
+        handleBuscaHCRecozimentoSimulado={handleBuscaHCRecozimentoSimulado}
+        handleBuscaBestFirst={handleBuscaBestFirst}
+        limparMetricas={limparMetricas}
+        primeiroBotaoRef={primeiroBotaoRef}
+        setTabelaAnterior={setTabelaAnterior}
+        retornarEstadoAnterior={retornarEstadoAnterior}
+      />
+      <br />
+      <div className="flex flex-row gap-4">
         <table
           id="tabela"
-          className="border-collapse border-4 border-gray-400 h-67.5 w-67.5 sm:h-112.5 sm:w-112.5"
+          className="border-collapse border-4 border-gray-400  w-[16.875rem] h-[16.875rem] lg:w-[22.5rem] lg:h-[22.5rem]"
         >
           <tbody>
             {tabela.map((linha, i) => (
@@ -409,9 +409,9 @@ const Tabela = (props: TabelaSudokuProps) => {
             ))}
           </tbody>
         </table>
+        <BarraMetricas metricas={metricas} tabela={tabela} />
       </div>
-      <BarraMetricas metricas={metricas} tabela={tabela} />
-    </section>
+    </div>
   );
 };
 export default Tabela;

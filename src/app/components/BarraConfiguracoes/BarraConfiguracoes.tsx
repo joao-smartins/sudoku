@@ -51,7 +51,7 @@ const BarraConfiguracoes = ({
   return (
     <div
       id="configurações"
-      className="flex flex-col gap-2 max-w-73 sm:max-w-118"
+      className="flex flex-col gap-2"
     >
       <div className="flex flex-wrap justify-between gap-2">
         <BotaoControle

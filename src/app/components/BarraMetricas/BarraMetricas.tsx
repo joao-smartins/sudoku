@@ -7,7 +7,7 @@ const BarraMetricas = (props: BarraMetricasProps) => {
   return (
     <div
       id="métricas"
-      className="flex flex-col gap-1 pl-4 justify-center flex-wrap"
+      className="flex flex-col gap-1 flex-wrap"
     >
       <span className="text-sm sm:text-base">
         Tempo de execução: {metricas?.tempoExecucao.toFixed(2)} ms
