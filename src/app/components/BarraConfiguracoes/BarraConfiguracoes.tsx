@@ -76,19 +76,19 @@ const BarraConfiguracoes = ({
         <BotaoControle
           texto="Fácil"
           onClick={() =>
-            !verificarBloqueio() && handleCarregarModelo(SUDOKU_FACIL)
+            !verificarBloqueio(true, false) && handleCarregarModelo(SUDOKU_FACIL)
           }
         />
         <BotaoControle
           texto="Médio"
           onClick={() =>
-            !verificarBloqueio() && handleCarregarModelo(SUDOKU_MEDIO)
+            !verificarBloqueio(true, false) && handleCarregarModelo(SUDOKU_MEDIO)
           }
         />
         <BotaoControle
           texto="Difícil"
           onClick={() =>
-            !verificarBloqueio() && handleCarregarModelo(SUDOKU_DIFICIL)
+            !verificarBloqueio(true, false) && handleCarregarModelo(SUDOKU_DIFICIL)
           }
         />
       </div>

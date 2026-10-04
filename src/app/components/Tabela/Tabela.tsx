@@ -365,7 +365,7 @@ const Tabela = (props: TabelaSudokuProps) => {
   };
 
   return (
-    <div id="tabela-container" className="flex flex-col">
+    <section id="tabela-container" className="flex flex-col">
       <BarraConfiguracoes
         tabela={tabela}
         isLoading={isLoading}
@@ -386,7 +386,7 @@ const Tabela = (props: TabelaSudokuProps) => {
       <div className="flex flex-row gap-4">
         <table
           id="tabela"
-          className="border-collapse border-4 border-gray-400  w-[16.875rem] h-[16.875rem] lg:w-[22.5rem] lg:h-[22.5rem]"
+          className="border-collapse border-4 border-gray-400 "
         >
           <tbody>
             {tabela.map((linha, i) => (
@@ -411,7 +411,7 @@ const Tabela = (props: TabelaSudokuProps) => {
         </table>
         <BarraMetricas metricas={metricas} tabela={tabela} />
       </div>
-    </div>
+    </section>
   );
 };
 export default Tabela;

@@ -16,7 +16,7 @@ export default function Home() {
   }, []);
 
   return (
-    <section className="flex flex-col flex-1 justify-center items-center">
+    <main className="flex flex-col flex-1 justify-center items-center">
       {sudokuTable && (
         <Tabela
           tabela={sudokuTable}
@@ -29,6 +29,6 @@ export default function Home() {
           setTabelaAnterior={setTabelaAnterior}
         />
       )}
-    </section>
+    </main>
   );
 }
