@@ -19,6 +19,7 @@ import { useRef } from "react";
 import BarraConfiguracoes from "../BarraConfiguracoes/BarraConfiguracoes";
 import BarraMetricas from "../BarraMetricas/BarraMetricas";
 import BotaoTabela from "../BotaoCelula/BotaoCelula";
+import { useToast } from "../ui/Toast/ToastProvider";
 
 const DELAY = 50;
 const ANIMADO = false;
@@ -34,6 +35,7 @@ const Tabela = (props: TabelaSudokuProps) => {
     tabelaAnterior,
     setTabelaAnterior,
   } = props;
+  const { toast } = useToast();
   const celulasRef = useRef<(HTMLButtonElement | null)[][]>([]);
   const primeiroBotaoRef = useRef<HTMLButtonElement>(null);
 
@@ -274,20 +276,24 @@ const Tabela = (props: TabelaSudokuProps) => {
 
   const verificarTabelaValida = () => {
     if (isLoading) {
-      alert(
+      toast.warning(
         "Aguarde a conclusão da resolução atual antes de iniciar uma nova.",
+        "Processamento em andamento",
       );
+      return false;
     }
     if (totalmentePreenchida(tabela)) {
-      alert(
+      toast.info(
         "A tabela já está totalmente preenchida. Não é necessário resolver o Sudoku.",
+        "Sudoku Completo",
       );
       return false;
     }
     const tabelaInvalida = tabelaPossuiCelulaInvalida(tabela);
     if (tabelaInvalida) {
-      alert(
+      toast.error(
         "A tabela possui células inválidas. Por favor, corrija-as antes de tentar resolver o Sudoku.",
+        "Células Inválidas",
       );
       return false;
     }
@@ -307,8 +313,22 @@ const Tabela = (props: TabelaSudokuProps) => {
     const tabelaResolvida = buscaPorProfundidade(tabela, setMetricas);
     if (tabelaResolvida) {
       modoExibicao(tabelaResolvida);
+      if (totalmentePreenchida(tabelaResolvida)) {
+        toast.success(
+          "Sudoku resolvido com sucesso utilizando Busca em Profundidade (DFS)!",
+          "Busca DFS Concluída",
+        );
+      } else {
+        toast.warning(
+          "Busca finalizada, mas a tabela não foi totalmente preenchida.",
+          "Tabela Incompleta",
+        );
+      }
     } else {
-      alert("Não foi possível resolver o Sudoku com busca em profundidade.");
+      toast.error(
+        "Não foi possível resolver o Sudoku com busca em profundidade.",
+        "Falha na Busca",
+      );
     }
   };
 
@@ -317,8 +337,22 @@ const Tabela = (props: TabelaSudokuProps) => {
     const tabelaResolvida = buscaHCEstocastica(tabela, setMetricas);
     if (tabelaResolvida) {
       modoExibicao(tabelaResolvida);
+      if (totalmentePreenchida(tabelaResolvida)) {
+        toast.success(
+          "Sudoku resolvido com Busca Hill Climbing Estocástica!",
+          "Busca Concluída",
+        );
+      } else {
+        toast.warning(
+          "Busca finalizada, mas a tabela não foi totalmente preenchida.",
+          "Tabela Incompleta",
+        );
+      }
     } else {
-      alert("Não foi possível resolver o Sudoku com busca Hill Climbing.");
+      toast.error(
+        "Não foi possível resolver o Sudoku com busca Hill Climbing Estocástica.",
+        "Falha na Busca",
+      );
     }
   };
 
@@ -327,8 +361,22 @@ const Tabela = (props: TabelaSudokuProps) => {
     const tabelaResolvida = buscaHCPrimeiraEscolha(tabela, setMetricas);
     if (tabelaResolvida) {
       modoExibicao(tabelaResolvida);
+      if (totalmentePreenchida(tabelaResolvida)) {
+        toast.success(
+          "Sudoku resolvido com Busca Hill Climbing Primeira Escolha!",
+          "Busca Concluída",
+        );
+      } else {
+        toast.warning(
+          "Busca finalizada, mas a tabela não foi totalmente preenchida.",
+          "Tabela Incompleta",
+        );
+      }
     } else {
-      alert("Não foi possível resolver o Sudoku com busca Hill Climbing.");
+      toast.error(
+        "Não foi possível resolver o Sudoku com busca Hill Climbing Primeira Escolha.",
+        "Falha na Busca",
+      );
     }
   };
 
@@ -337,8 +385,22 @@ const Tabela = (props: TabelaSudokuProps) => {
     const tabelaResolvida = buscaHCRecozimentoSimulado(tabela, setMetricas);
     if (tabelaResolvida) {
       modoExibicao(tabelaResolvida);
+      if (totalmentePreenchida(tabelaResolvida)) {
+        toast.success(
+          "Sudoku resolvido com Busca Hill Climbing Recozimento Simulado!",
+          "Busca Concluída",
+        );
+      } else {
+        toast.warning(
+          "Busca finalizada, mas a tabela não foi totalmente preenchida.",
+          "Tabela Incompleta",
+        );
+      }
     } else {
-      alert("Não foi possível resolver o Sudoku com busca Hill Climbing.");
+      toast.error(
+        "Não foi possível resolver o Sudoku com busca Recozimento Simulado.",
+        "Falha na Busca",
+      );
     }
   };
 
@@ -347,8 +409,22 @@ const Tabela = (props: TabelaSudokuProps) => {
     const tabelaResolvida = buscaBestFirst(tabela, setMetricas);
     if (tabelaResolvida) {
       modoExibicao(tabelaResolvida);
+      if (totalmentePreenchida(tabelaResolvida)) {
+        toast.success(
+          "Sudoku resolvido com Busca Heurística Best First!",
+          "Busca Concluída",
+        );
+      } else {
+        toast.warning(
+          "Busca finalizada, mas a tabela não foi totalmente preenchida.",
+          "Tabela Incompleta",
+        );
+      }
     } else {
-      alert("Não foi possível resolver o Sudoku com busca Best First.");
+      toast.error(
+        "Não foi possível resolver o Sudoku com busca Best First.",
+        "Falha na Busca",
+      );
     }
   };
 
@@ -382,33 +458,36 @@ const Tabela = (props: TabelaSudokuProps) => {
         setTabelaAnterior={setTabelaAnterior}
         retornarEstadoAnterior={retornarEstadoAnterior}
       />
-      <br />
-      <div className="flex flex-row gap-4">
-        <table
-          id="tabela"
-          className="border-collapse border-4 border-gray-400  w-[16.875rem] h-[16.875rem] lg:w-[22.5rem] lg:h-[22.5rem]"
-        >
-          <tbody>
-            {tabela.map((linha, i) => (
-              <tr key={i}>
-                {linha.map((celula, j) => (
-                  <td key={j} className={classeBordaPorQuadrante(i, j)}>
-                    <BotaoTabela
-                      ref={(el) => {
-                        (celulasRef.current[i] ??= [])[j] = el;
-                      }}
-                      alt={`linha ${i}, coluna ${j}`}
-                      celula={celula}
-                      onFocus={() => handleClick(i, j)}
-                      onClick={() => handleClick(i, j)}
-                      onKeyDown={(e) => handleKeyDown(e, i, j)}
-                    />
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="mt-4 flex flex-col md:flex-row items-center md:items-start justify-center gap-6">
+        <div className="rounded-2xl bg-white dark:bg-slate-900 p-2 shadow-sm border-2 border-[#b9d7f3] dark:border-slate-700">
+          <table
+            id="tabela"
+            className="
+            border-collapse border-4 border-[#7fb2e6] dark:border-slate-500 bg-white dark:bg-slate-900 rounded-lg overflow-hidden
+            "
+          >
+            <tbody>
+              {tabela.map((linha, i) => (
+                <tr key={i}>
+                  {linha.map((celula, j) => (
+                    <td key={j} className={classeBordaPorQuadrante(i, j)}>
+                      <BotaoTabela
+                        ref={(el) => {
+                          (celulasRef.current[i] ??= [])[j] = el;
+                        }}
+                        alt={`linha ${i}, coluna ${j}`}
+                        celula={celula}
+                        onFocus={() => handleClick(i, j)}
+                        onClick={() => handleClick(i, j)}
+                        onKeyDown={(e) => handleKeyDown(e, i, j)}
+                      />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <BarraMetricas metricas={metricas} tabela={tabela} />
       </div>
     </div>

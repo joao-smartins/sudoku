@@ -4,10 +4,10 @@ const BotaoCelula = (props: BotaoTabelaProps) => {
 
   const classeCelula =
     celula.selecionada && celula.permitida
-      ? "bg-blue-300 hover:bg-blue-500! text-white"
+      ? "bg-[#d4e5f6] dark:bg-[#1e3a5f] hover:bg-[#b9d7f3]! dark:hover:bg-[#2a4d7c]! text-[#0c2a4d]! dark:text-[#d4e5f6]! font-bold ring-2 ring-[#7fb2e6] ring-inset"
       : celula.permitida
-        ? "text-black"
-        : "bg-red-500  hover:bg-red-700! text-white";
+        ? "text-slate-800 dark:text-slate-100"
+        : "bg-red-400 dark:bg-red-600 hover:bg-red-500! dark:hover:bg-red-700! text-white!";
 
   return (
     <button
@@ -16,8 +16,8 @@ const BotaoCelula = (props: BotaoTabelaProps) => {
       onKeyDown={onKeyDown}
       onFocus={onFocus}
       aria-label={alt}
-      className={`w-[0.5625rem] h-[0.5625rem] sm:w-[1.125rem] sm:h-[1.125rem] md:w-[1.6875rem] md:h-[1.6875rem] lg:w-[2.25rem] lg:h-[2.25rem]
- p-0 flex items-center justify-center hover:bg-blue-100 hover:cursor-pointer ${classeCelula}`}
+      className={`w-2.25 h-2.25 sm:w-4.5 sm:h-4.5 md:w-6.75 md:h-6.75 lg:w-9 lg:h-9
+ p-0 flex items-center justify-center hover:bg-[#d4e5f6]/50 dark:hover:bg-slate-800 hover:cursor-pointer hover:text-[#0c2a4d] dark:hover:text-white transition-colors duration-150 ${classeCelula}`}
     >
       {celula.valor}
     </button>
