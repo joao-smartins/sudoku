@@ -8,13 +8,25 @@ export default function Home() {
   const [sudokuTable, setSudokuTable] = useState<TabelaSudoku | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const [metricas, setMetricas] = useState<Metricas | undefined>();
+  const [tabelaAnterior, setTabelaAnterior] = useState<TabelaSudoku | undefined>();
   useEffect(() => {
     preencherTabela(setSudokuTable);
   }, []);
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center">
-      {sudokuTable && <Tabela tabela={sudokuTable} setTabela={setSudokuTable} isLoading={isLoading} setIsLoading={setIsLoading} metricas={metricas} setMetricas={setMetricas} />}
+      {sudokuTable && (
+        <Tabela
+          tabela={sudokuTable}
+          setTabela={setSudokuTable}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
+          metricas={metricas}
+          setMetricas={setMetricas}
+          tabelaAnterior={tabelaAnterior}
+          setTabelaAnterior={setTabelaAnterior}
+        />
+      )}
     </div>
   );
 }

@@ -6,6 +6,7 @@ import {
   SUDOKU_FACIL,
   SUDOKU_MEDIO,
 } from "@/app/utils/modelosSudoku";
+import { totalmentePreenchida, validarSeHaSolucao } from "@/app/utils/funcoes";
 
 const BarraConfiguracoes = ({
   tabela,
@@ -20,8 +21,11 @@ const BarraConfiguracoes = ({
   handleBuscaBestFirst,
   limparMetricas,
   primeiroBotaoRef,
+  setTabelaAnterior,
+  retornarEstadoAnterior
 }: BarraConfiguracoesProps) => {
-  const verificarBloqueio = (limpar: boolean = true) => {
+
+  const verificarBloqueio = (limpar: boolean = true, validarSolucao: boolean = true) => {
     if (limpar && limparMetricas) {
       limparMetricas();
     }
@@ -31,6 +35,13 @@ const BarraConfiguracoes = ({
       );
       return true;
     }
+    if (validarSolucao && !totalmentePreenchida(tabela) && !validarSeHaSolucao(tabela)) {
+      alert(
+        "A tabela não possui solução. Por favor, altere o estado inicial.",
+      );
+      return true;
+    }
+    setTabelaAnterior?.([...tabela]);
     return false;
   };
 
@@ -43,13 +54,17 @@ const BarraConfiguracoes = ({
         <BotaoControle
           ref={primeiroBotaoRef}
           texto="Esvaziar Tabela"
-          onClick={() => !verificarBloqueio() && esvaziarTabela()}
+          onClick={() => !verificarBloqueio(true, false) && esvaziarTabela()}
         />
         <BotaoControle
           texto="Validar Celulas"
           onClick={() =>
-            !verificarBloqueio(false) && revalidarTodasCelulas(tabela)
+            !verificarBloqueio(true, false) && revalidarTodasCelulas(tabela)
           }
+        />
+        <BotaoControle
+          texto="Retornar Estado Anterior"
+          onClick={() => !verificarBloqueio(true, false) && retornarEstadoAnterior?.()}
         />
       </div>
       <div className="flex flex-wrap justify-between gap-2">

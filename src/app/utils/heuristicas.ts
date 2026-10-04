@@ -1,7 +1,6 @@
 import { retornarCelulaNaoPreenchidaAleatoria, verificarCelulaPreInsercao } from "./funcoes";
 import { CelulaSudoku, TabelaSudoku } from "./tipos";
 const LIMITE = 9;
-const POSSIBILIDADES = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 // A Fazer -> MRV
 export const calcularPossibilidades = (tabela: TabelaSudoku) => {

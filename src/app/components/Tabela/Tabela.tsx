@@ -1,9 +1,19 @@
 import { buscaPorProfundidade } from "@/app/utils/buscasCegas";
-import { buscaBestFirst, buscaHCEstocastica, buscaHCPrimeiraEscolha, buscaHCRecozimentoSimulado } from "@/app/utils/buscasInformadas";
-import { blocoPermitidoPosInsercao, colunaPermitidaPosInsercao, linhaPermitidaPosInsercao, tabelaPossuiCelulaInvalida, totalmentePreenchida, verificarQualOBloco } from "@/app/utils/funcoes";
 import {
-    carregarModelo
-} from "@/app/utils/modelosSudoku";
+  buscaBestFirst,
+  buscaHCEstocastica,
+  buscaHCPrimeiraEscolha,
+  buscaHCRecozimentoSimulado,
+} from "@/app/utils/buscasInformadas";
+import {
+  blocoPermitidoPosInsercao,
+  colunaPermitidaPosInsercao,
+  linhaPermitidaPosInsercao,
+  tabelaPossuiCelulaInvalida,
+  totalmentePreenchida,
+  verificarQualOBloco,
+} from "@/app/utils/funcoes";
+import { carregarModelo } from "@/app/utils/modelosSudoku";
 import { TabelaSudoku, TabelaSudokuProps } from "@/app/utils/tipos";
 import { useRef } from "react";
 import BarraConfiguracoes from "../BarraConfiguracoes/BarraConfiguracoes";
@@ -11,33 +21,35 @@ import BarraMetricas from "../BarraMetricas/BarraMetricas";
 import BotaoTabela from "../BotaoCelula/BotaoCelula";
 
 const DELAY = 50;
-const ANIMADO = false; 
+const ANIMADO = false;
 
 const Tabela = (props: TabelaSudokuProps) => {
-  const { tabela, setTabela, isLoading, setIsLoading, metricas, setMetricas } = props;
+  const { tabela, setTabela, isLoading, setIsLoading, metricas, setMetricas, tabelaAnterior, setTabelaAnterior } =
+    props;
   const celulasRef = useRef<(HTMLButtonElement | null)[][]>([]);
   const primeiroBotaoRef = useRef<HTMLButtonElement>(null);
 
-  const Carregando = (flag : boolean = true) => {
-    if(flag) {
-      limparMetricas();
-    }
-    if(isLoading) {
-      alert("Aguarde a conclusão da resolução atual antes de iniciar uma nova.");
-      return true;
-    }
-    return false
-  }
+  const retornarEstadoAnterior = () => {
+    if (!tabelaAnterior) return;
+    if (!tabela) return;
+    setTabelaAnterior?.(tabela);
+    setTabela(tabelaAnterior);
+  };
 
   const limparMetricas = () => {
-    setMetricas && setMetricas({
-      tempoExecucao: 0,
-      nosExpandidos: 0,
-      backtracking: null,
-    });
-  }
+    setMetricas &&
+      setMetricas({
+        tempoExecucao: 0,
+        nosExpandidos: 0,
+        backtracking: null,
+      });
+  };
 
-  const alocaoAnimadaComTimeout = (novaTabela: TabelaSudoku, delay: number, duracao: number = delay) => {
+  const alocaoAnimadaComTimeout = (
+    novaTabela: TabelaSudoku,
+    delay: number,
+    duracao: number = delay,
+  ) => {
     setIsLoading(true);
     for (let i = 0; i < 9; i++) {
       for (let j = 0; j < 9; j++) {
@@ -46,7 +58,8 @@ const Tabela = (props: TabelaSudokuProps) => {
         const tempoDesativacao = tempoAtivacao + duracao;
 
         setTimeout(() => {
-          let jaPossuiValor = tabela[i][j].valor === null || tabela[i][j].valor === undefined;
+          let jaPossuiValor =
+            tabela[i][j].valor === null || tabela[i][j].valor === undefined;
           setTabela((prevTabela) => {
             if (!prevTabela) return undefined;
             const tabelaAtualizada = [...prevTabela];
@@ -75,14 +88,20 @@ const Tabela = (props: TabelaSudokuProps) => {
         }, tempoDesativacao);
       }
     }
-    setTimeout(() => {
-      setIsLoading(false);
-    }, delay * 81 + duracao);
+    setTimeout(
+      () => {
+        setIsLoading(false);
+      },
+      delay * 81 + duracao,
+    );
   };
 
-
-  const revalidarCelula = (tabela: TabelaSudoku, linha: number, coluna: number, novoValor: number) => {
-
+  const revalidarCelula = (
+    tabela: TabelaSudoku,
+    linha: number,
+    coluna: number,
+    novoValor: number,
+  ) => {
     const linhaValida = linhaPermitidaPosInsercao(tabela, linha, novoValor);
     const colunaValida = colunaPermitidaPosInsercao(tabela, coluna, novoValor);
     const blocoUtilizado = verificarQualOBloco(linha, coluna);
@@ -92,7 +111,7 @@ const Tabela = (props: TabelaSudokuProps) => {
       tabela,
       blocoUtilizado.linhaInicial,
       blocoUtilizado.colunaInicial,
-      novoValor
+      novoValor,
     );
 
     setTabela((prevTabela) => {
@@ -105,7 +124,7 @@ const Tabela = (props: TabelaSudokuProps) => {
       };
       return novaTabela;
     });
-  }
+  };
 
   const revalidarTodasCelulas = (tabela: TabelaSudoku) => {
     for (let i = 0; i < 9; i++) {
@@ -116,7 +135,7 @@ const Tabela = (props: TabelaSudokuProps) => {
         }
       }
     }
-  }
+  };
 
   const limparSelecionadas = () => {
     setTabela((prevTabela) => {
@@ -125,11 +144,11 @@ const Tabela = (props: TabelaSudokuProps) => {
         linha.map((celula) => ({
           ...celula,
           selecionada: false,
-        }))
+        })),
       );
       return novaTabela;
     });
-  }
+  };
 
   const esvaziarTabela = () => {
     setTabela((prevTabela) => {
@@ -141,11 +160,11 @@ const Tabela = (props: TabelaSudokuProps) => {
           permitida: true,
           selecionada: false,
           possibilidades: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-        }))
+        })),
       );
       return novaTabela;
     });
-  }
+  };
 
   const handleClick = (linha: number, coluna: number) => {
     limparSelecionadas();
@@ -159,7 +178,7 @@ const Tabela = (props: TabelaSudokuProps) => {
       };
       return novaTabela;
     });
-  }
+  };
 
   const handleDeletarValorCelula = (linha: number, coluna: number) => {
     setTabela((prevTabela) => {
@@ -174,7 +193,7 @@ const Tabela = (props: TabelaSudokuProps) => {
       revalidarTodasCelulas(novaTabela);
       return novaTabela;
     });
-  }
+  };
 
   const handleMoverSeta = (direcao: string, linha: number, coluna: number) => {
     let novaLinha = linha;
@@ -195,14 +214,23 @@ const Tabela = (props: TabelaSudokuProps) => {
     }
     // O foco dispara o onFocus do botão, que já seleciona a célula via handleClick.
     celulasRef.current[novaLinha]?.[novaColuna]?.focus();
-  }
+  };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, linha: number, coluna: number) => {
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLButtonElement>,
+    linha: number,
+    coluna: number,
+  ) => {
     if (e.key === "Backspace" || e.key === "Delete" || e.key === "0") {
       handleDeletarValorCelula(linha, coluna);
       return;
     }
-    if(e.key == "ArrowUp" || e.key == "ArrowDown" || e.key == "ArrowLeft" || e.key == "ArrowRight") {
+    if (
+      e.key == "ArrowUp" ||
+      e.key == "ArrowDown" ||
+      e.key == "ArrowLeft" ||
+      e.key == "ArrowRight"
+    ) {
       handleMoverSeta(e.key, linha, coluna);
       return;
     }
@@ -218,7 +246,7 @@ const Tabela = (props: TabelaSudokuProps) => {
     if (Number.isNaN(Number(e.key))) return;
     const novoValor = Number(e.key);
     if (novoValor < 1 || novoValor > 9) return;
-    if(tabela[linha][coluna].valor === novoValor) {
+    if (tabela[linha][coluna].valor === novoValor) {
       revalidarTodasCelulas(tabela);
       return;
     }
@@ -234,32 +262,37 @@ const Tabela = (props: TabelaSudokuProps) => {
       revalidarTodasCelulas(novaTabela);
       return novaTabela;
     });
-  }
+  };
 
   const verificarTabelaValida = () => {
-    if(isLoading) {
-      alert("Aguarde a conclusão da resolução atual antes de iniciar uma nova.");
+    if (isLoading) {
+      alert(
+        "Aguarde a conclusão da resolução atual antes de iniciar uma nova.",
+      );
     }
     if (totalmentePreenchida(tabela)) {
-      alert("A tabela já está totalmente preenchida. Não é necessário resolver o Sudoku.");
+      alert(
+        "A tabela já está totalmente preenchida. Não é necessário resolver o Sudoku.",
+      );
       return false;
     }
     const tabelaInvalida = tabelaPossuiCelulaInvalida(tabela);
     if (tabelaInvalida) {
-      alert("A tabela possui células inválidas. Por favor, corrija-as antes de tentar resolver o Sudoku.");
+      alert(
+        "A tabela possui células inválidas. Por favor, corrija-as antes de tentar resolver o Sudoku.",
+      );
       return false;
     }
     return true;
-  }
+  };
 
-  const modoExibicao = ( tabela: TabelaSudoku) => {
+  const modoExibicao = (tabela: TabelaSudoku) => {
     if (ANIMADO) {
       alocaoAnimadaComTimeout(tabela, DELAY);
-    }
-    else {
+    } else {
       setTabela(tabela);
     }
-  }
+  };
 
   const handleBuscaProfundidade = () => {
     if (!verificarTabelaValida()) return;
@@ -279,7 +312,7 @@ const Tabela = (props: TabelaSudokuProps) => {
     } else {
       alert("Não foi possível resolver o Sudoku com busca Hill Climbing.");
     }
-  }
+  };
 
   const handleBuscaHCPrimeiraEscolha = () => {
     if (!verificarTabelaValida()) return;
@@ -299,28 +332,29 @@ const Tabela = (props: TabelaSudokuProps) => {
     } else {
       alert("Não foi possível resolver o Sudoku com busca Hill Climbing.");
     }
-  }
+  };
 
   const handleBuscaBestFirst = () => {
     if (!verificarTabelaValida()) return;
     const tabelaResolvida = buscaBestFirst(tabela, setMetricas);
     if (tabelaResolvida) {
       modoExibicao(tabelaResolvida);
-    }
-    else{
+    } else {
       alert("Não foi possível resolver o Sudoku com busca Best First.");
     }
-  }
+  };
 
   const handleCarregarModelo = (modelo: number[][]) => {
     setTabela(carregarModelo(modelo));
   };
 
   const classeBordaPorQuadrante = (linha: number, coluna: number) => {
-    const bordaDireita = (coluna + 1) % 3 === 0 && coluna !== 8 ? "border-r-4" : "";
-    const bordaInferior = (linha + 1) % 3 === 0 && linha !== 8 ? "border-b-4" : "";
+    const bordaDireita =
+      (coluna + 1) % 3 === 0 && coluna !== 8 ? "border-r-4" : "";
+    const bordaInferior =
+      (linha + 1) % 3 === 0 && linha !== 8 ? "border-b-4" : "";
     return `border border-gray-400 ${bordaDireita} ${bordaInferior}`;
-  }
+  };
 
   return (
     <section id="sudoku" className="flex flex-row">
@@ -338,6 +372,8 @@ const Tabela = (props: TabelaSudokuProps) => {
           handleBuscaBestFirst={handleBuscaBestFirst}
           limparMetricas={limparMetricas}
           primeiroBotaoRef={primeiroBotaoRef}
+          setTabelaAnterior={setTabelaAnterior}
+          retornarEstadoAnterior={retornarEstadoAnterior}
         />
         <br />
         <table
@@ -350,7 +386,7 @@ const Tabela = (props: TabelaSudokuProps) => {
                 {linha.map((celula, j) => (
                   <td key={j} className={classeBordaPorQuadrante(i, j)}>
                     <BotaoTabela
-                      ref={(el) => { 
+                      ref={(el) => {
                         (celulasRef.current[i] ??= [])[j] = el;
                       }}
                       alt={`linha ${i}, coluna ${j}`}

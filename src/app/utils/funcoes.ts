@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { CelulaSudoku, TabelaSudoku } from "./tipos";
+import { calcularPossibilidades } from "./heuristicas";
 
 //Utilidades
 
@@ -361,4 +362,23 @@ export const totalmentePreenchida = (tabela: TabelaSudoku) => {
     }
   }
   return totalmentePreenchida;
+}
+
+const procurarCelulaSemPossiblidades = (tabela: TabelaSudoku) : boolean => {
+  let encontrou = false;
+  for (let i = 0; i < 9 && !encontrou; i++) {
+    for (let j = 0; j < 9 && !encontrou; j++) {
+      if (tabela[i][j].possibilidades.length === 0) {
+        encontrou = true;
+      }
+    }
+  }
+  return encontrou;
+}
+
+export const validarSeHaSolucao = (tabela: TabelaSudoku) => {
+  const tabelaCopia = copiarTabela(tabela);
+  calcularPossibilidades(tabelaCopia);
+  if (procurarCelulaSemPossiblidades(tabelaCopia)) return false;
+  return true;  
 }

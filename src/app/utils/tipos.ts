@@ -16,6 +16,8 @@ export interface TabelaSudokuProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   metricas?: Metricas;
   setMetricas?: React.Dispatch<React.SetStateAction<Metricas | undefined>>;
+  tabelaAnterior?: TabelaSudoku | undefined;
+  setTabelaAnterior?: React.Dispatch<React.SetStateAction<TabelaSudoku | undefined>>;
 }
 
 export interface BotaoTabelaProps {
@@ -62,4 +64,6 @@ export interface BarraConfiguracoesProps {
   handleBuscaBestFirst: () => void;
   limparMetricas?: () => void;
   primeiroBotaoRef?: React.Ref<HTMLButtonElement>;
+  setTabelaAnterior?: React.Dispatch<React.SetStateAction<TabelaSudoku | undefined>>;
+  retornarEstadoAnterior?: () => void;
 }
