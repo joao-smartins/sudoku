@@ -194,15 +194,15 @@ export const processarMetricas = ({
   const tabelaCompleta = totalmentePreenchida(tabela);
   const solucaoValida = tabelaCompleta && !tabelaPossuiCelulaInvalida(tabela);
 
-  console.log("Tabela:", tabela);
-  console.log("Nós expandidos:", nosExpandidos);
-  console.log("Tabela completa:", tabelaCompleta);
-  console.log("Solução válida:", solucaoValida);
-  console.log("Tempo de execução:", `${tempoTotalMs.toFixed(2)} ms`);
-  console.log(
-    "Backtracking:",
-    backtracking !== null ? backtracking : "N/A"
-  );
+  // console.log("Tabela:", tabela);
+  // console.log("Nós expandidos:", nosExpandidos);
+  // console.log("Tabela completa:", tabelaCompleta);
+  // console.log("Solução válida:", solucaoValida);
+  // console.log("Tempo de execução:", `${tempoTotalMs.toFixed(2)} ms`);
+  // console.log(
+  //   "Backtracking:",
+  //   backtracking !== null ? backtracking : "N/A"
+  // );
 
   if (setMetricas) {
     setMetricas({

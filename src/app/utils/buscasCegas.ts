@@ -104,13 +104,13 @@ export const buscaPorProfundidade = (tabela: TabelaSudoku, setMetricas?: React.D
           const tabelaCompleta = totalmentePreenchida(tabelaCopia);
           const solucaoValida = tabelaCompleta && !tabelaPossuiCelulaInvalida(tabelaCopia);
 
-          console.log("Solução encontrada!");
-          console.log("Tabela:", tabelaCopia);
-          console.log("Nós expandidos:", nosExpandidos);
-          console.log("Tabela completa:", tabelaCompleta);
-          console.log("Solução válida:", solucaoValida);
-          console.log("Tempo de execução:", `${tempoTotalMs.toFixed(2)} ms`);
-          console.log("Backtracking:", backtracking);
+          // console.log("Solução encontrada!");
+          // console.log("Tabela:", tabelaCopia);
+          // console.log("Nós expandidos:", nosExpandidos);
+          // console.log("Tabela completa:", tabelaCompleta);
+          // console.log("Solução válida:", solucaoValida);
+          // console.log("Tempo de execução:", `${tempoTotalMs.toFixed(2)} ms`);
+          // console.log("Backtracking:", backtracking);
           if (setMetricas) {
             setMetricas({
               tempoExecucao: tempoTotalMs,
@@ -128,13 +128,13 @@ export const buscaPorProfundidade = (tabela: TabelaSudoku, setMetricas?: React.D
   const tabelaCompleta = totalmentePreenchida(tabelaCopia);
   const solucaoValida = tabelaCompleta && !tabelaPossuiCelulaInvalida(tabelaCopia);
 
-  console.log("Tabela original:", tabela);
-  console.log("Tabela final:", tabelaCopia);
-  console.log("Nós expandidos:", nosExpandidos);
-  console.log("Tabela completa:", tabelaCompleta);
-  console.log("Solução válida:", solucaoValida);
-  console.log("Tempo de execução:", `${tempoTotalMs.toFixed(2)} ms`);
-  console.log("Backtracking:", backtracking);
+  // console.log("Tabela original:", tabela);
+  // console.log("Tabela final:", tabelaCopia);
+  // console.log("Nós expandidos:", nosExpandidos);
+  // console.log("Tabela completa:", tabelaCompleta);
+  // console.log("Solução válida:", solucaoValida);
+  // console.log("Tempo de execução:", `${tempoTotalMs.toFixed(2)} ms`);
+  // console.log("Backtracking:", backtracking);
   if (setMetricas) {
     setMetricas({
       tempoExecucao: tempoTotalMs,

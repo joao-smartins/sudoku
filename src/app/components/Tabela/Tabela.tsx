@@ -197,6 +197,7 @@ const Tabela = (props: TabelaSudokuProps) => {
         ...novaTabela[linha][coluna],
         valor: null,
         permitida: true,
+        possibilidades: [1, 2, 3, 4, 5, 6, 7, 8, 9],
       };
       revalidarTodasCelulas(novaTabela);
       return novaTabela;
