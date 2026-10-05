@@ -463,7 +463,7 @@ const Tabela = (props: TabelaSudokuProps) => {
           <table
             id="tabela"
             className="
-            border-collapse border-4 border-[#7fb2e6] dark:border-slate-500 bg-white dark:bg-slate-900 rounded-lg overflow-hidden
+            border-collapse border-2 border-[#7fb2e6] dark:border-slate-500 bg-white dark:bg-slate-900 
             "
           >
             <tbody>
