@@ -21,7 +21,7 @@ export const DropdownTrigger = React.forwardRef<HTMLButtonElement, DropdownTrigg
         <button
           id={id}
           ref={ref}
-          className={`group flex items-center justify-between gap-2 px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg border border-[#c2dbf3] dark:border-slate-700/80 bg-white dark:bg-slate-800 text-[#133763] dark:text-slate-100 shadow-xs hover:bg-[#d4e5f6]/50 dark:hover:bg-slate-700/80 hover:border-[#a2c8ef] dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-[#7fb2e6]/70 cursor-pointer transition-all duration-150 select-none ${className ?? ""}`}
+          className={`group flex items-center justify-between gap-2 px-3.5 py-2 text-xs md:text-sm font-medium rounded-lg border border-[#c2dbf3] dark:border-slate-700/80 bg-white dark:bg-slate-800 text-[#133763] dark:text-slate-100 shadow-xs hover:bg-[#d4e5f6]/50 dark:hover:bg-slate-700/80 hover:border-[#a2c8ef] dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-[#7fb2e6]/70 cursor-pointer transition-all duration-150 select-none ${className ?? ""}`}
           {...props}
         >
           <span className="flex items-center gap-2">

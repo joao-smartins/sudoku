@@ -16,7 +16,7 @@ const BotaoCelula = (props: BotaoTabelaProps) => {
       onKeyDown={onKeyDown}
       onFocus={onFocus}
       aria-label={alt}
-      className={`w-2.25 h-2.25 sm:w-4.5 sm:h-4.5 md:w-6.75 md:h-6.75 lg:w-9 lg:h-9
+      className={`w-6.75 h-6.75 lg:w-9 lg:h-9
  p-0 flex items-center justify-center hover:bg-[#d4e5f6]/50 dark:hover:bg-slate-800 hover:cursor-pointer hover:text-[#0c2a4d] dark:hover:text-white transition-colors duration-150 ${classeCelula}`}
     >
       {celula.valor}

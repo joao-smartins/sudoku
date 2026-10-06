@@ -19,7 +19,7 @@ const BarraMetricas = (props: BarraMetricasProps) => {
   return (
     <div
       id="métricas"
-      className="flex flex-col gap-2.5 p-3.5 rounded-xl border border-[#c5ddf5] dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm w-full sm:w-64 min-w-[200px]"
+      className="flex flex-col gap-0.5 md:gap-2.5 p-3.5 rounded-xl border border-[#c5ddf5] dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm w-full md:w-64 min-w-[200px]"
     >
       <div className="flex items-center justify-between pb-2 border-b border-[#d4e5f6] dark:border-slate-800">
         <span className="text-xs font-bold uppercase tracking-wider text-[#1e5fa8] dark:text-[#8cb8e4] flex items-center gap-1.5">
@@ -28,7 +28,7 @@ const BarraMetricas = (props: BarraMetricasProps) => {
         </span>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-row flex-wrap md:flex-col gap-2">
         {/* 1. Tempo de execução */}
         <AppTooltip
           content="Tempo total decorrido (em milissegundos) para encontrar a solução"
